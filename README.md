@@ -8,7 +8,7 @@ A futuristic personal portfolio website showcasing my journey as an Electronics 
 
 ## 🌐 Live Website
 
-🔗 [View Live Portfolio]()
+🔗 [View Live Portfolio]( https://mohamedidris0429.github.io/mohamed-idris-futuristic-portfolio/)
 
 ## 👨‍💻 About
 
