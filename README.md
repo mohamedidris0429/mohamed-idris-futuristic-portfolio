@@ -1,4 +1,8 @@
-MY FIRST PORTFOLIO WEBSITE LIVE URL: (8ae65a6a-mohamed-idris-futuristic-portfolio.netlify.app)
+MY FIRST PORTFOLIO WEBSITE 
+## 🌐 Live Website
+
+🔗 [View Live Portfolio]( https://mohamedidris0429.github.io/mohamed-idris-futuristic-portfolio/)
+
 
 # 🚀 Mohamed Idris — Futuristic Portfolio
 
