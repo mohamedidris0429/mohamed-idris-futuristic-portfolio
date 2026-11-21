@@ -1,3 +1,18 @@
+MY FIRST PORTFOLIO WEBSITE 
+## 🌐 Live Website
+
+🔗 [View Live Portfolio](https://mohamed-idris-futuristic-portfolio.onrender.com⁠)
+
+- 🎓 I'm a First-Year ECE Student passionate about technology and software development.
+- 💻 I enjoy building modern, responsive and creative websites.
+- 🚀 Interested in Frontend Development and Full Stack Development.
+- 🧠 Currently learning C Programming and Prompt Engineering.
+- 🤖 I use AI-assisted development to learn faster, improve productivity and explore new ideas.
+- 🔨 I enjoy turning ideas into real-world projects.
+- 🎯 My goal is to continuously develop my skills and build a strong career in the software industry.
+
+---
+
 # Idris Portfolio — Next.js backend + certificate portal
 
 One Next.js app serves both the public portfolio and the owner certificate API, so
