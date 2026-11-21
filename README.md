@@ -1,78 +1,81 @@
-MY FIRST PORTFOLIO WEBSITE 
-## 🌐 Live Website
+# Idris Portfolio — Next.js backend + certificate portal
 
-🔗 [View Live Portfolio]( https://mohamedidris0429.github.io/mohamed-idris-futuristic-portfolio/)
+One Next.js app serves both the public portfolio and the owner certificate API, so
+every request is same-origin and the owner session cookie works without CORS.
 
+```
+frontend+backend/
+├── index.html                  ← the portfolio (source of truth)
+└── idris-portfolio-backend/    ← Next.js API + hosting
+    ├── app/api/…               ← auth, session, certificate CRUD
+    ├── lib/                    ← auth, Supabase, owner guard
+    ├── public/portfolio.html   ← generated copy of ../index.html (served at /)
+    ├── scripts/                ← frontend sync + password hash helpers
+    └── supabase/schema.sql     ← table, RLS and storage bucket
+```
 
-# 🚀 Mohamed Idris — Futuristic Portfolio
+`GET /` is rewritten to `public/portfolio.html`. `npm run dev` and `npm run build`
+copy `../index.html` into `public/portfolio.html` first, so the portfolio stays the
+single source of truth while still shipping inside the deployable folder.
 
-> ECE Student × Creative Developer
+## 1. Setup
 
-A futuristic personal portfolio website showcasing my journey as an Electronics and Communication Engineering student and creative developer.
+```bash
+cd idris-portfolio-backend
+npm install
+cp .env.example .env.local     # then fill in the four values
+npm run hash-password          # paste the result into OWNER_PASSWORD_HASH
+```
 
-## 🌐 Live Website
+In `.env.local`, escape every `$` in the bcrypt hash as `\$` — Next.js expands
+`$NAME` inside env files and would otherwise corrupt the hash:
 
-🔗 [View Live Portfolio]( https://mohamedidris0429.github.io/mohamed-idris-futuristic-portfolio/)
+```
+OWNER_PASSWORD_HASH=\$2b\$12\$abcdefghij...
+```
 
-## 👨‍💻 About
+Alternatively use `OWNER_PASSWORD_HASH_B64` (base64 of the hash), which contains
+no `$` and can never be mangled. On a hosting dashboard, paste the hash raw.
 
-Hi, I'm Mohamed Idris, an ECE student interested in technology, creative development, electronics and modern web experiences.
+Run `supabase/schema.sql` once in the Supabase SQL editor. It creates the
+`certificates` table, locks it down with RLS and creates the **private**
+`certificates` storage bucket.
 
-This portfolio represents my skills, education, projects and continuous learning journey.
+## 2. Develop
 
-## 🛠️ Technologies
+```bash
+npm run dev     # http://localhost:3000
+```
 
-- HTML5
-- CSS3
-- JavaScript
-- Tailwind CSS
-- Responsive Web Design
-- UI/UX Design
-- Interactive Animations
+`npm run typecheck`, `npm run lint` and `npm run build` are available as well.
 
-## ⚡ Features
+## 3. API
 
-- 🌑 Futuristic dark UI
-- 📱 Fully responsive design
-- ⚡ Interactive animations
-- 📡 ECE × Code themed interface
-- 🎓 Education timeline
-- 🧠 Skills showcase
-- 🚀 Project showcase
-- 🔗 GitHub & LinkedIn integration
-- 📊 Interactive technical visualizations
+| Method | Route | Access |
+| --- | --- | --- |
+| POST | `/api/login` | public (passkey) |
+| POST | `/api/logout` | public |
+| GET | `/api/session` | public |
+| GET | `/api/upload/certificates` | public — published only |
+| GET | `/api/upload/certificates/admin` | owner — drafts included |
+| POST | `/api/upload/certificates` | owner — multipart upload |
+| PATCH | `/api/upload/certificates/:id` | owner — edit / publish / unpublish |
+| DELETE | `/api/upload/certificates?id=…` | owner |
+| GET | `/api/upload/certificates/:id/file` | public for published, owner for drafts |
+| GET | `/api/test-supabase` | public health check |
 
-## 📂 Projects
+Documents live in a private bucket and are served through 60-second signed URLs.
+The service-role key never leaves the server.
 
-The portfolio includes my selected projects and experiments in:
+## 4. Deploy (free tier: Vercel Hobby)
 
-- Web Development
-- Creative UI
-- Interactive Experiences
-- Electronics / ECE concepts
+1. Push this folder (`idris-portfolio-backend`) to GitHub.
+2. Vercel → **Add New Project** → import the repo. Framework preset: **Next.js**.
+   Build command `npm run build`, output handled automatically.
+3. Add the environment variables `SUPABASE_URL`, `SUPABASE_SECRET_KEY`,
+   `AUTH_SECRET`, `OWNER_PASSWORD_HASH` (raw hash, no backslashes) for
+   Production/Preview/Development.
+4. Deploy, then check `https://<app>.vercel.app/api/test-supabase` returns
+   `{"success":true}` and open `/` for the portfolio.
 
-## 📱 Responsive Design
-
-Designed and optimized for:
-
-- 📱 Mobile
-- 📲 Tablet
-- 💻 Laptop
-- 🖥️ Desktop
-
-## 🔗 Connect With Me
-
-- GitHub: https://github.com/mohamedidris0429
-- LinkedIn: https://www.linkedin.com/in/mohamedidris4
-
-## 📸 Portfolio Preview
-
-Visit the live website to explore the complete interactive experience.
-
-## 📄 License
-
-This project is created for personal portfolio and educational purposes.
-
----
-
-### Made with 💻 + ⚡ by Mohamed Idris
+See `DEPLOYMENT.md` for the step-by-step checklist and troubleshooting.
