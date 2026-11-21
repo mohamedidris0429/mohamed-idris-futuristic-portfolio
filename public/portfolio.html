@@ -1,0 +1,3131 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>P. Mohamed Idris | ECE Student × Creative Developer • NEURAL ENGINEER</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+  @layer base {
+    html, body { margin: 0; padding: 0; }
+    body { overscroll-behavior: none; }
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+  }
+  ::-webkit-scrollbar { display: none; }
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  .neural-grid-pattern {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 64, 51, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 64, 51, 0.035) 1px, transparent 1px);
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes spin-reverse-slow {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 28s linear infinite;
+  }
+  .animate-spin-reverse {
+    animation: spin-reverse-slow 36s linear infinite;
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 6s ease-in-out infinite;
+  }
+  .hud-bracket {
+    position: relative;
+  }
+  .hud-bracket::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; width: 8px; height: 8px;
+    border-top: 2px solid #FF4033;
+    border-left: 2px solid #FF4033;
+  }
+  .hud-bracket::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; right: -2px; width: 8px; height: 8px;
+    border-bottom: 2px solid #FFA66B;
+    border-right: 2px solid #FFA66B;
+  }
+  /* ==========================================================================
+     CINEMATIC 3D LAYER — charcoal ground, red key light, real CSS-3D depth.
+     Builds on the existing motion classes (.pa-*) instead of replacing them:
+     the arrival, tilt and parallax systems below are the same ones, retuned.
+     ========================================================================== */
+  :root {
+    --cs-red: 255, 64, 51;
+    --cs-ember: 255, 166, 107;
+    --pa-ease-out: cubic-bezier(.16, 1, .3, 1);
+    --pa-ease-depth: cubic-bezier(.22, 1, .36, 1);
+    --pa-ease-soft: cubic-bezier(.4, 0, .2, 1);
+  }
+
+  /* --- lighting grade: a single red key from the top, corners fall off --- */
+  .cs-grade {
+    position: fixed; inset: 0; z-index: 40; pointer-events: none;
+    background:
+      radial-gradient(130% 70% at 50% -12%, rgba(var(--cs-red), .10), transparent 58%),
+      radial-gradient(95% 85% at 50% 45%, transparent 62%, rgba(0, 0, 0, .34) 100%);
+  }
+  .cs-boot {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60;
+    pointer-events: none; transform-origin: left center;
+    background: linear-gradient(90deg, transparent, rgba(var(--cs-red), .95), rgba(var(--cs-ember), .55), transparent);
+    animation: cs-boot 1.15s var(--pa-ease-out) both;
+  }
+  @keyframes cs-boot {
+    0% { transform: scaleX(0); }
+    65% { transform: scaleX(1); opacity: 1; }
+    100% { transform: scaleX(1); opacity: 0; }
+  }
+
+  /* --- section ignition tick + drawn heading rule --- */
+  main > section::before {
+    content: ''; position: absolute; top: -1px; left: 0; height: 1px;
+    width: min(320px, 34%); pointer-events: none;
+    background: linear-gradient(90deg, rgba(var(--cs-red), .8), rgba(var(--cs-red), 0));
+  }
+  main > section h2 { letter-spacing: -.03em; text-wrap: balance; }
+  main > section h2::after {
+    content: ''; display: block; width: 56px; height: 2px; margin-top: .9rem;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #FF4033, rgba(255, 64, 51, 0));
+  }
+  .text-center h2::after {
+    margin-inline: auto;
+    background: linear-gradient(90deg, rgba(255, 64, 51, 0), #FF4033, rgba(255, 64, 51, 0));
+  }
+  #home h1 {
+    letter-spacing: -.045em; text-wrap: balance;
+    text-shadow: 0 0 64px rgba(var(--cs-red), .16);
+  }
+  main p { text-wrap: pretty; }
+
+  /* --- hero: CSS-3D floor receding to a red horizon (no WebGL) --- */
+  .cs-hero-content { position: relative; z-index: 2; }
+  .cs-floor {
+    position: absolute; left: -12%; right: -12%; bottom: -1px; height: 46%;
+    z-index: 0; pointer-events: none; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to top, #000 5%, rgba(0, 0, 0, .55) 45%, transparent 92%);
+    mask-image: linear-gradient(to top, #000 5%, rgba(0, 0, 0, .55) 45%, transparent 92%);
+  }
+  .cs-floor__grid {
+    position: absolute; inset: -45% -20% -25%;
+    transform: perspective(560px) rotateX(63deg); transform-origin: 50% 100%;
+    background-image:
+      linear-gradient(to right, rgba(var(--cs-red), .13) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(var(--cs-red), .13) 1px, transparent 1px);
+    background-size: 72px 72px;
+    animation: cs-floor-drift 26s linear infinite;
+  }
+  .cs-floor__glow {
+    position: absolute; left: 50%; bottom: 34%; width: min(760px, 92%); height: 2px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, rgba(var(--cs-red), .55), transparent);
+    filter: blur(1.5px);
+    box-shadow: 0 0 40px 8px rgba(var(--cs-red), .12);
+  }
+  @keyframes cs-floor-drift {
+    to { background-position: 0 72px, 0 72px; }
+  }
+
+  /* --- 1. staggered arrival --- */
+  @keyframes pa-rise {
+    from { opacity: 0; translate: 0 26px; }
+    to   { opacity: 1; translate: 0 0; }
+  }
+  .pa-pending { opacity: 0; }
+  .pa-in {
+    animation: pa-rise .95s var(--pa-ease-out) both;
+    animation-delay: var(--pa-delay, 0ms);
+  }
+
+  /* --- 2. dephased float --- */
+  @keyframes pa-float {
+    from { translate: 0 0; }
+    to   { translate: 0 -6px; }
+  }
+  .pa-float {
+    animation: pa-float calc(5.6s + var(--pa-i, 0) * .63s) ease-in-out
+               calc(var(--pa-i, 0) * -1.27s) infinite alternate;
+  }
+
+  /* --- 3. depth tilt + pointer sheen (transform only) --- */
+  .pa-tilt {
+    position: relative;
+    isolation: isolate;
+    transform:
+      perspective(1200px)
+      rotateX(calc(var(--pa-rx, 0deg) + var(--cs-scroll, 0deg)))
+      rotateY(var(--pa-ry, 0deg))
+      translateZ(var(--pa-tz, 0px));
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  /* The pointer sheen is its own layer, never a background-image override: a
+     card keeps whatever gradient it has (the active-undergrad card does) and
+     the highlight is added on top of it. */
+  .cs-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .38s var(--pa-ease-soft);
+    background: radial-gradient(460px circle at var(--cs-mx, 50%) var(--cs-my, 50%),
+                                rgba(var(--cs-red), .10), transparent 46%);
+  }
+  .pa-tilt.cs-lit > .cs-sheen { opacity: 1; }
+  .pa-tilt.cs-lit {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .055),
+      0 0 0 1px rgba(var(--cs-red), .10);
+  }
+  .cs-depth { transform: translateZ(var(--cs-z, 0px)); }
+
+  /* --- 4. damped pointer parallax --- */
+  .pa-parallax { translate: var(--pa-px, 0px) var(--pa-py, 0px); }
+
+  /* --- 5. scroll-linked rule --- */
+  .pa-progress {
+    transform: scaleX(var(--pa-progress, 0));
+    transform-origin: left center;
+  }
+
+  /* --- header bar: labels never reflow at desktop widths --- */
+  header nav a { white-space: nowrap; }
+  header a[href="#home"] { flex-shrink: 0; }
+  header a[href="#home"] span { white-space: nowrap; }
+  #open-owner-auth-btn { flex-shrink: 0; white-space: nowrap; }
+  @media (min-width: 1280px) {
+    header nav a { padding-left: .6rem; padding-right: .6rem; }
+  }
+
+  /* --- hero owns the first screen, like a title sequence --- */
+  #home {
+    min-height: calc(100vh - 4rem);
+    min-height: calc(100svh - 4rem);
+    display: grid;
+    align-content: center;
+  }
+
+  @media (max-width: 1023px) {
+    .cs-floor { height: 38%; }
+    .pa-tilt { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cs-boot { display: none; }
+    .cs-floor__grid { animation: none; }
+    .pa-pending { opacity: 1; }
+    .pa-in, .pa-float { animation: none; }
+    .pa-tilt, .cs-depth { transform: none; }
+    .pa-parallax { translate: none; }
+  }
+</style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "background": "#0A0A0B",
+          "surface": "#0A0A0B",
+          "surface-dim": "#070708",
+          "surface-container-lowest": "#060607",
+          "surface-container-low": "#0D0D0F",
+          "surface-container": "#111114",
+          "surface-container-high": "#17171B",
+          "surface-container-highest": "#1F1F24",
+          "primary": "#FF4033",
+          "primary-container": "#FF4033",
+          "on-primary": "#180403",
+          "secondary": "#FFA66B",
+          "secondary-container": "#5C1F0B",
+          "tertiary": "#F5F1E8",
+          "on-surface": "#F5F1E8",
+          "on-surface-variant": "#A8A29C",
+          "outline": "#5E5550",
+          "outline-variant": "rgba(245, 241, 232, 0.10)",
+          "lime-glow": "rgba(255, 64, 51, 0.15)",
+          "coral-glow": "rgba(255, 166, 107, 0.12)"
+        },
+        fontFamily: {
+          "headline-lg": ["Space Grotesk", "sans-serif"],
+          "headline-md": ["Space Grotesk", "sans-serif"],
+          "display-hero": ["Space Grotesk", "sans-serif"],
+          "telemetry-mono": ["JetBrains Mono", "monospace"],
+          "hud-micro": ["JetBrains Mono", "monospace"],
+          "body-lg": ["Hanken Grotesk", "sans-serif"],
+          "body-md": ["Hanken Grotesk", "sans-serif"],
+          "body-sm": ["Hanken Grotesk", "sans-serif"]
+        },
+        spacing: {
+          "space-2xs": "0.25rem",
+          "space-xs": "0.5rem",
+          "space-sm": "0.75rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-2xl": "3.5rem",
+          "space-3xl": "5rem",
+          "gutter-mobile": "1.25rem",
+          "gutter-desktop": "2.5rem",
+          "container-max": "80rem"
+        }
+      }
+    }
+  };
+</script>
+</head>
+<body class="bg-[#0A0A0B] font-body-md text-[#F5F1E8] selection:bg-primary/25 selection:text-primary min-h-screen relative overflow-x-hidden neural-grid-pattern">
+
+<div aria-hidden="true" class="cs-grade"></div>
+<div aria-hidden="true" class="cs-boot"></div>
+
+<!-- Dual Ambient Cursor Follower (Neon Lime + Vibrant Coral) -->
+<div class="pointer-events-none fixed -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full bg-gradient-to-br from-[#FF4033]/12 via-[#FFA66B]/8 to-transparent blur-[110px] transition-transform duration-100 z-0 hidden lg:block" id="cursor-glow" style="transform: translate3d(330.5px, 2859px, 0px) translate(-50%, -50%);"></div>
+
+<!-- NAVIGATION -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0B]/85 backdrop-blur-xl border-b border-outline-variant">
+  <div aria-hidden="true" id="scroll-progress" class="pa-progress pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-primary/50 via-primary to-secondary/60"></div>
+  <div class="h-16 max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop flex items-center justify-between">
+    <a class="flex items-center gap-space-xs group" href="#home">
+      <div class="px-2.5 py-1 bg-surface-container border border-primary/40 rounded-lg flex items-center justify-center font-telemetry-mono text-xs text-primary group-hover:border-primary transition-all shadow-[0_0_12px_rgba(255,64,51,0.18)]">
+        <span class="font-bold tracking-wider">MI</span>
+      </div>
+      <div class="flex items-center gap-1.5 px-2.5 py-1 bg-surface-container-low rounded-lg border border-outline-variant">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+        <span class="font-hud-micro text-[10px] text-primary tracking-widest">[NEURAL // ECE]</span>
+      </div>
+    </a>
+    
+    <!-- Desktop Nav Links -->
+    <nav class="hidden xl:flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-low/95 border border-outline-variant shadow-inner">
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-primary bg-surface-container border border-primary/30 transition-colors" href="#home">Home</a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#about">About</a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#ece-code">ECE × Code</a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#education">Education</a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#skills">Skills</a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#projects">Projects</a><a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white hover:text-primary transition-colors flex items-center gap-1" href="#certifications"><span>Certifications</span><span class="w-1 h-1 rounded-full bg-primary animate-pulse"></span></a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#learning">Learning</a>
+      <a class="px-3.5 py-1.5 rounded-full text-xs font-medium text-on-surface-variant hover:text-white transition-colors" href="#contact">Contact</a>
+    </nav>
+    
+    <!-- Right Outbound Channels -->
+    <div class="flex items-center gap-space-xs">
+      <button id="open-owner-auth-btn" class="px-2.5 py-1.5 rounded-lg bg-surface-container/90 border border-primary/40 hover:border-primary font-hud-micro text-[11px] text-primary hover:bg-primary/10 transition-all flex items-center gap-1.5 shadow-[0_0_10px_rgba(255,64,51,0.12)] group" title="Owner Access Portal" onclick="openOwnerPortal()"><span class="material-symbols-outlined text-[15px] group-hover:rotate-12 transition-transform text-primary">key</span><span class="hidden sm:inline font-bold tracking-wider">OWNER ACCESS [AUTH]</span><span class="sm:hidden font-bold">AUTH</span></button><div class="hidden sm:flex items-center gap-2">
+        <a class="px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant font-hud-micro text-xs text-on-surface hover:text-primary hover:border-primary/50 transition-all flex items-center gap-1.5" href="https://github.com/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+          <span>GitHub</span>
+          <span class="text-[10px] text-primary">↗</span>
+        </a>
+        <a class="px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant font-hud-micro text-xs text-on-surface hover:text-secondary hover:border-secondary/50 transition-all flex items-center gap-1.5" href="https://www.linkedin.com/in/mohamedidris4" rel="noopener noreferrer" target="_blank">
+          <span>LinkedIn</span>
+          <span class="text-[10px] text-secondary">↗</span>
+        </a>
+      </div>
+      <button aria-label="Toggle Navigation Menu" class="xl:hidden p-2 text-on-surface-variant hover:text-primary transition-colors" id="mobile-nav-btn">
+        <span class="material-symbols-outlined text-[22px]">menu</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Mobile Menu -->
+  <div class="hidden xl:hidden border-b border-outline-variant bg-[#0A0A0B]/98 backdrop-blur-2xl px-gutter-mobile py-space-lg" id="mobile-menu">
+    <nav class="flex flex-col gap-1.5 mb-space-md">
+      <a class="px-space-md py-2 rounded-lg text-sm text-primary font-medium bg-surface-container" href="#home">Home</a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#about">About</a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#ece-code">ECE × Code</a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#education">Education</a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#skills">Skills</a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#projects">Projects</a><a class="px-space-md py-2 rounded-lg text-sm text-primary font-medium flex items-center justify-between" href="#certifications"><span>Certifications</span><span class="px-2 py-0.5 rounded text-[10px] font-hud-micro bg-primary/20 text-primary border border-primary/30">VERIFIED</span></a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#learning">Learning</a>
+      <a class="px-space-md py-2 rounded-lg text-sm text-on-surface-variant hover:text-white" href="#contact">Contact</a>
+    </nav>
+    <div class="flex flex-col gap-2 pt-space-sm border-t border-outline-variant">
+      <a class="px-space-md py-2 rounded-lg bg-surface-container border border-outline-variant font-hud-micro text-xs text-on-surface flex items-center justify-between" href="https://github.com/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+        <span>GitHub Matrix</span><span class="text-primary">↗</span>
+      </a>
+      <a class="px-space-md py-2 rounded-lg bg-surface-container border border-outline-variant font-hud-micro text-xs text-on-surface flex items-center justify-between" href="https://www.linkedin.com/in/mohamedidris4" rel="noopener noreferrer" target="_blank">
+        <span>LinkedIn Connect</span><span class="text-secondary">↗</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="w-full pt-16 bg-surface relative z-10">
+
+<!-- SECTION 00: HERO (#home) -->
+<section class="relative w-full overflow-hidden bg-gradient-to-b from-[#0A0A0B] via-[#0F0F12] to-[#0A0A0B] pb-space-3xl pt-space-xl" id="home">
+  <div class="pointer-events-none absolute left-1/4 top-16 h-96 w-96 -translate-x-1/2 rounded-full bg-[#FF4033]/10 blur-[130px]"></div>
+  <div class="pointer-events-none absolute right-1/4 top-28 h-80 w-80 rounded-full bg-[#FFA66B]/10 blur-[120px]"></div>
+
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop">
+    <!-- Top Telemetry Readout -->
+    <div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-lg">
+      <div class="flex items-center gap-space-xs">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container border border-primary/30 font-hud-micro text-[11px] text-primary tracking-widest uppercase shadow-[0_0_10px_rgba(255,64,51,0.15)]">
+          <span class="h-1.5 w-1.5 rounded-full bg-primary animate-ping"></span>
+          SYS // ACTIVE
+        </span>
+        <span class="font-telemetry-mono text-xs text-on-surface-variant">PORT: 0429 • BAUDRATE: 115200</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-space-sm font-hud-micro text-[11px] text-on-surface-variant tracking-wider">
+        <span class="text-primary">LAT 10.7656° N</span>
+        <span class="text-outline">•</span>
+        <span class="text-secondary">LON 79.8424° E</span>
+        <span class="text-outline">•</span>
+        <span class="text-[#F5F1E8]">NAGAPATTINAM // TN</span>
+      </div>
+    </div>
+
+    <!-- Hero Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+      <!-- Left Narrative -->
+      <div class="lg:col-span-7 space-y-space-md">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container border border-outline-variant">
+          <span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+          <span class="font-hud-micro text-xs uppercase tracking-wider text-primary font-semibold">ECE STUDENT × CREATIVE DEVELOPER</span>
+        </div>
+        <h1 class="font-display-hero text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#F5F1E8] leading-tight">
+          P. MOHAMED <span class="bg-gradient-to-r from-primary via-[#FF8A7A] to-secondary bg-clip-text text-transparent">IDRIS</span>
+        </h1>
+        <p class="font-headline-md text-xl sm:text-2xl text-primary font-medium tracking-tight">
+          Engineering ideas. Building digital experiences.
+        </p>
+        <p class="font-body-lg text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed">
+          Where electronics thinking meets creative code. I’m an ECE student at <span class="text-[#F5F1E8] font-medium">Sir Isaac Newton College</span>, Nagapattinam, exploring web development, creative interfaces, animation, and emerging technologies while building my skills through hands-on projects.
+        </p>
+
+        <!-- Tags Cluster -->
+        <div class="flex flex-wrap items-center gap-2 pt-space-xs">
+          <span class="px-3 py-1 rounded-lg bg-surface-container border border-outline-variant font-telemetry-mono text-xs text-[#F5F1E8] flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-[15px] text-primary">school</span>
+            ECE • 2026–2030
+          </span>
+          <span class="px-3 py-1 rounded-lg bg-surface-container border border-primary/30 font-telemetry-mono text-xs text-primary flex items-center gap-1.5 shadow-sm">
+            <span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+            STATUS // CURRENTLY LEARNING &amp; BUILDING
+          </span>
+          <span class="px-3 py-1 rounded-lg bg-surface-container border border-outline-variant font-telemetry-mono text-xs text-on-surface-variant flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-[15px] text-secondary">location_on</span>
+            NAGAPATTINAM, TAMIL NADU
+          </span>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="flex flex-wrap items-center gap-space-sm pt-space-sm">
+          <a class="group px-6 py-3 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold tracking-wider hover:bg-[#FF6A5C] transition-all flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02]" href="#projects">
+            <span>EXPLORE MY WORK</span>
+            <span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+          </a>
+          <a class="px-5 py-3 rounded-xl bg-surface-container border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs hover:border-primary hover:text-primary transition-all flex items-center gap-1.5 shadow-sm" href="https://github.com/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+            <span>GITHUB</span>
+            <span class="text-[10px] text-primary">↗</span>
+          </a>
+          <a class="px-5 py-3 rounded-xl bg-surface-container border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs hover:border-secondary hover:text-secondary transition-all flex items-center gap-1.5 shadow-sm" href="https://www.linkedin.com/in/mohamedidris4" rel="noopener noreferrer" target="_blank">
+            <span>LINKEDIN</span>
+            <span class="text-[10px] text-secondary">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Visual: Holographic Microprocessor Frame -->
+      <div class="lg:col-span-5 flex justify-center lg:justify-end">
+        <div class="relative w-full max-w-sm rounded-2xl bg-surface-container/90 p-space-md shadow-2xl backdrop-blur-xl border border-primary/30 hud-bracket">
+          <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant">
+            <div class="flex items-center gap-2">
+              <div class="h-2 w-2 rounded-full bg-primary animate-pulse"></div>
+              <span class="font-hud-micro text-[11px] text-primary tracking-widest font-semibold">NEURAL SILICON CORE // 0429</span>
+            </div>
+            <span class="font-hud-micro text-[10px] text-secondary font-bold">ACTIVE CHIP</span>
+          </div>
+
+          <!-- Concentric Rotating Silicon Ring Frame -->
+          <div class="relative mx-auto my-space-md flex h-64 w-64 items-center justify-center">
+            <div class="absolute inset-0 rounded-full border border-primary/25 animate-spin-slow"></div>
+            <div class="absolute inset-3 rounded-full border border-dashed border-secondary/35 animate-spin-reverse"></div>
+            <div class="absolute inset-7 rounded-full bg-surface-container-high/60 border border-outline-variant"></div>
+
+            <!-- Profile Portrait -->
+            <div class="relative h-44 w-44 overflow-hidden rounded-full border-2 border-primary/50 shadow-[0_0_24px_rgba(255,64,51,0.25)] flex items-center justify-center bg-surface-container-highest">
+              <img alt="P. Mohamed Idris profile portrait" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCatORVGAAPGJehHyvGHLgWYqC4pN43PTOm-Y2gZu174OMwaki8YANAuCuq3imn-nsAv9rAXOoLsqbupxCRekoX80OBrDF-rzfYdBnr03aA34ud9UTLU7VmddDrA3eF4_n96429l-1koxIQ-BXvZ7qSrc-xGp1rrET9K00awSXOpMPduzZDoSq1tyBfkxI874HxDd1XPDx1SFh840bPfYQBJLeeMOY0EsNVjZ88cp8">
+            </div>
+
+            <!-- Orbit Node Badges -->
+            <span class="absolute top-1 left-1 px-2 py-0.5 rounded-full bg-surface-container-highest/95 border border-primary/40 font-hud-micro text-[9px] text-primary">ECE // SILICON</span>
+            <span class="absolute top-1 right-1 px-2 py-0.5 rounded-full bg-surface-container-highest/95 border border-secondary/40 font-hud-micro text-[9px] text-secondary">BUILD // 2026</span>
+            <span class="absolute bottom-1 left-1 px-2 py-0.5 rounded-full bg-surface-container-highest/95 border border-outline-variant font-hud-micro text-[9px] text-[#F5F1E8]">NODE // ACTIVE</span>
+            <span class="absolute bottom-1 right-1 px-2 py-0.5 rounded-full bg-surface-container-highest/95 border border-primary/40 font-hud-micro text-[9px] text-primary">SPEED // 60FPS</span>
+          </div>
+
+          <!-- Status readouts -->
+          <div class="grid grid-cols-2 gap-2 pt-space-xs font-telemetry-mono text-xs">
+            <div class="rounded-xl bg-surface-container-low p-2.5 border border-outline-variant">
+              <div class="text-on-surface-variant font-hud-micro text-[10px] uppercase">Specialization</div>
+              <div class="text-primary font-medium truncate mt-0.5">ECE • Embedded / Web</div>
+            </div>
+            <div class="rounded-xl bg-surface-container-low p-2.5 border border-outline-variant">
+              <div class="text-on-surface-variant font-hud-micro text-[10px] uppercase">Affiliation</div>
+              <div class="text-secondary font-medium truncate mt-0.5">Sir Isaac Newton Col.</div>
+            </div>
+          </div>
+
+          <!-- Simulated Clock Bus -->
+          <div class="mt-2 rounded-xl bg-surface-container-lowest p-2.5 flex items-center justify-between border border-outline-variant">
+            <div class="flex items-center gap-2">
+              <span class="font-hud-micro text-[10px] text-primary font-bold">CLOCK_BUS</span>
+              <span class="font-hud-micro text-[10px] text-on-surface-variant">48.000 MHz</span>
+            </div>
+            <svg class="h-3.5 w-24 text-primary" fill="none" viewBox="0 0 96 16">
+              <path d="M0 8 H16 L22 2 L28 14 L34 8 H50 L56 3 L62 13 L68 8 H96" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 01: ECE × CODE SIGNATURE INTERACTION (#ece-code) -->
+<section class="w-full bg-[#0A0A0B] py-space-3xl relative overflow-hidden border-t border-outline-variant" id="ece-code">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2 font-hud-micro text-xs text-primary tracking-widest uppercase font-semibold">
+          <span>01 // ARCHITECTURE</span>
+          <span class="h-1 w-1 rounded-full bg-primary"></span>
+          <span>HARDWARE × SOFTWARE CONVERGENCE</span>
+        </div>
+        <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold tracking-tight">ECE × CODE</h2>
+      </div>
+      <p class="font-body-md text-sm sm:text-base text-on-surface-variant max-w-lg leading-relaxed">
+        “Electronics gives me the engineering foundation. Code gives me a way to turn ideas into interactive experiences.”
+      </p>
+    </div>
+
+    <!-- 4 Pipeline Stages in Lime & Coral -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <!-- Phase 01 -->
+      <div class="p-4 rounded-xl bg-surface-container-low/95 border border-primary/30 hover:border-primary transition-all duration-300 shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-hud-micro text-[10px] pb-2 border-b border-outline-variant">
+            <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span><span class="font-bold text-primary tracking-widest">PHASE 01</span></div>
+            <span class="text-on-surface-variant font-telemetry-mono">GPIO_01</span>
+          </div>
+          <div class="pt-3 flex items-baseline justify-between"><span class="font-headline-md text-lg text-[#F5F1E8] font-bold tracking-tight">SIGNAL</span><span class="font-telemetry-mono text-[10px] text-primary/90 bg-surface-container-highest px-1.5 py-0.5 rounded border border-outline-variant">CLK: 48MHz</span></div>
+          <p class="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed">Sensors, clocks &amp; frequencies</p>
+        </div>
+        <div class="pt-3 mt-2 border-t border-outline-variant flex items-center justify-between font-hud-micro text-[9px] text-on-surface-variant"><span class="flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-primary"></span>ADC: ACTIVE</span><span class="text-primary font-telemetry-mono">3.3V</span></div>
+      </div>
+      <!-- Phase 02 -->
+      <div class="p-4 rounded-xl bg-surface-container-low/95 border border-secondary/30 hover:border-secondary transition-all duration-300 shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-hud-micro text-[10px] pb-2 border-b border-outline-variant">
+            <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-secondary animate-pulse"></span><span class="font-bold text-secondary tracking-widest">PHASE 02</span></div>
+            <span class="text-on-surface-variant font-telemetry-mono">FSM_02</span>
+          </div>
+          <div class="pt-3 flex items-baseline justify-between"><span class="font-headline-md text-lg text-[#F5F1E8] font-bold tracking-tight">LOGIC</span><span class="font-telemetry-mono text-[10px] text-secondary/90 bg-surface-container-highest px-1.5 py-0.5 rounded border border-outline-variant">GATES/DFF</span></div>
+          <p class="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed">Boolean state machines &amp; gating</p>
+        </div>
+        <div class="pt-3 mt-2 border-t border-outline-variant flex items-center justify-between font-hud-micro text-[9px] text-on-surface-variant"><span class="flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-secondary"></span>SYNCHRONOUS</span><span class="text-secondary font-telemetry-mono">0x04</span></div>
+      </div>
+      <!-- Phase 03 -->
+      <div class="p-4 rounded-xl bg-surface-container-low/95 border border-primary/30 hover:border-primary transition-all duration-300 shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-hud-micro text-[10px] pb-2 border-b border-outline-variant">
+            <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span><span class="font-bold text-primary tracking-widest">PHASE 03</span></div>
+            <span class="text-on-surface-variant font-telemetry-mono">JS_LOOP</span>
+          </div>
+          <div class="pt-3 flex items-baseline justify-between"><span class="font-headline-md text-lg text-[#F5F1E8] font-bold tracking-tight">CODE</span><span class="font-telemetry-mono text-[10px] text-primary/90 bg-surface-container-highest px-1.5 py-0.5 rounded border border-outline-variant">rAF_SYNC</span></div>
+          <p class="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed">JavaScript logic &amp; animation loops</p>
+        </div>
+        <div class="pt-3 mt-2 border-t border-outline-variant flex items-center justify-between font-hud-micro text-[9px] text-on-surface-variant"><span class="flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-primary"></span>DOM: ACTIVE</span><span class="text-primary font-telemetry-mono">60FPS</span></div>
+      </div>
+      <!-- Phase 04 -->
+      <div class="p-4 rounded-xl bg-surface-container-low/95 border border-secondary/30 hover:border-secondary transition-all duration-300 shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-hud-micro text-[10px] pb-2 border-b border-outline-variant">
+            <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-secondary animate-pulse"></span><span class="font-bold text-secondary tracking-widest">PHASE 04</span></div>
+            <span class="text-on-surface-variant font-telemetry-mono">KINETIC</span>
+          </div>
+          <div class="pt-3 flex items-baseline justify-between"><span class="font-headline-md text-lg text-[#F5F1E8] font-bold tracking-tight">INTERACTION</span><span class="font-telemetry-mono text-[10px] text-secondary/90 bg-surface-container-highest px-1.5 py-0.5 rounded border border-outline-variant">TACTILE</span></div>
+          <p class="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed">Tactile UI feedback &amp; kinetic UX</p>
+        </div>
+        <div class="pt-3 mt-2 border-t border-outline-variant flex items-center justify-between font-hud-micro text-[9px] text-on-surface-variant"><span class="flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-secondary"></span>REALTIME</span><span class="text-secondary font-telemetry-mono">&lt;16ms</span></div>
+      </div>
+    </div>
+
+    <!-- Oscilloscope Diagnostic Rig -->
+    <div class="rounded-2xl bg-surface-container/90 p-space-md lg:p-space-lg shadow-2xl border border-primary/30">
+      <div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-md border-b border-outline-variant">
+        <div class="flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-primary animate-ping"></span>
+          <span class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">DIGITAL OSCILLOSCOPE RIG • MODEL ECE-429</span>
+        </div>
+        <button id="audio-synth-btn" class="px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all flex items-center gap-2 font-hud-micro text-xs shadow-sm" onclick="(function(btn){if(!window._synthCtx){window._synthCtx=new(window.AudioContext||window.webkitAudioContext)();window._synthOsc=window._synthCtx.createOscillator();window._synthGain=window._synthCtx.createGain();window._synthGain.gain.setValueAtTime(0.06,window._synthCtx.currentTime);window._synthOsc.connect(window._synthGain);window._synthGain.connect(window._synthCtx.destination);window._synthActive=false;}const dot=btn.querySelector('.synth-indicator');const label=btn.querySelector('.synth-label');const icon=btn.querySelector('.material-symbols-outlined');if(!window._synthActive){if(window._synthCtx.state==='suspended'){window._synthCtx.resume();}try{window._synthOsc.start();}catch(e){}const freq=parseFloat(document.getElementById('freq-slider')?.value||'12')*18;window._synthOsc.frequency.setValueAtTime(Math.max(60,freq),window._synthCtx.currentTime);window._synthGain.gain.setTargetAtTime(0.06,window._synthCtx.currentTime,0.05);window._synthActive=true;btn.className='px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/50 text-primary transition-all flex items-center gap-2 font-hud-micro text-xs shadow-[0_0_10px_rgba(255,64,51,0.15)]';if(dot)dot.className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse synth-indicator';if(label)label.textContent='SYNTH: ON';if(icon)icon.textContent='volume_up';}else{window._synthGain.gain.setTargetAtTime(0,window._synthCtx.currentTime,0.05);window._synthActive=false;btn.className='px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline-variant hover:border-primary/50 text-on-surface-variant hover:text-primary transition-all flex items-center gap-2 font-hud-micro text-xs shadow-sm';if(dot)dot.className='w-1.5 h-1.5 rounded-full bg-outline-variant synth-indicator';if(label)label.textContent='SYNTH: OFF';if(icon)icon.textContent='volume_off';}})(this)"><span class="material-symbols-outlined text-[15px]">volume_off</span><span class="w-1.5 h-1.5 rounded-full bg-outline-variant synth-indicator"></span><span class="synth-label font-bold tracking-wider">SYNTH: OFF</span></button><div class="flex items-center gap-1.5 bg-surface-container-low p-1 rounded-xl border border-outline-variant">
+          <button class="px-3 py-1 rounded-lg font-hud-micro text-xs text-on-primary bg-primary font-bold transition-all shadow-sm" id="wave-sine">SINE</button>
+          <button class="px-3 py-1 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white transition-all" id="wave-square">SQUARE</button>
+          <button class="px-3 py-1 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white transition-all" id="wave-pulse">PULSE</button>
+        </div>
+      </div>
+
+      <!-- Canvas Display -->
+      <div class="relative w-full h-64 md:h-80 rounded-xl bg-surface-container-lowest overflow-hidden shadow-inner flex items-center justify-center border border-outline-variant my-space-md">
+        <canvas class="absolute inset-0 w-full h-full cursor-crosshair" id="scopeCanvas" width="1149" height="318"></canvas>
+        <div class="pointer-events-none absolute bottom-3 left-4 flex items-center gap-space-md font-telemetry-mono text-xs text-on-surface-variant/90">
+          <span>TIME/DIV: <strong class="text-primary font-semibold" id="time-div-readout">2.0ms</strong></span>
+          <span>VOLT/DIV: <strong class="text-secondary font-semibold" id="volt-div-readout">500mV</strong></span>
+          <span>FREQ: <strong class="text-[#F5F1E8] font-semibold" id="freq-readout">12.0 Hz</strong></span>
+        </div>
+        <div class="pointer-events-none absolute top-3 right-4 font-hud-micro text-[11px] text-primary/90">
+          [INTERACTIVE // MOVE CURSOR OVER DISPLAY TO MODULATE]
+        </div>
+      </div>
+
+      <!-- Controls Rack -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-space-sm pt-2">
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-hud-micro text-on-surface-variant uppercase">Frequency Mod</span>
+            <span class="font-telemetry-mono text-primary font-bold" id="freq-slider-val">12 Hz</span>
+          </div>
+          <input class="w-full accent-[#FF4033] cursor-pointer h-1.5 bg-surface-container rounded-lg" id="freq-slider" max="40" min="2" type="range" value="12">
+        </div>
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-hud-micro text-on-surface-variant uppercase">Amplitude Mod</span>
+            <span class="font-telemetry-mono text-secondary font-bold" id="amp-slider-val">60 mV</span>
+          </div>
+          <input class="w-full accent-[#FFA66B] cursor-pointer h-1.5 bg-surface-container rounded-lg" id="amp-slider" max="95" min="10" type="range" value="60">
+        </div>
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-center">
+          <span class="font-hud-micro text-[10px] text-on-surface-variant uppercase">Signal Processing</span>
+          <span class="font-telemetry-mono text-xs text-[#F5F1E8] font-medium mt-1">Analog Waveform Synthesized</span>
+        </div>
+        <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col justify-center">
+          <span class="font-hud-micro text-[10px] text-on-surface-variant uppercase">Frontend Translation</span>
+          <span class="font-telemetry-mono text-xs text-primary font-medium mt-1">60 FPS requestAnimationFrame</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 02: ABOUT (#about) -->
+<section class="w-full bg-[#0F0F12] py-space-3xl relative border-t border-outline-variant" id="about">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <div class="space-y-1">
+      <span class="font-hud-micro text-xs text-secondary tracking-widest uppercase font-semibold">02 // PROFILE</span>
+      <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold tracking-tight">An ECE student with a developer mindset.</h2>
+      <p class="font-body-md text-sm sm:text-base text-on-surface-variant max-w-xl">
+        Honest curiosity over inflated titles. I bridge physical circuitry fundamentals with creative software design.
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-space-md">
+      <!-- Academic Genesis -->
+      <div class="md:col-span-7 rounded-2xl bg-surface-container p-space-lg shadow-xl border border-outline-variant flex flex-col justify-between space-y-space-md">
+        <div class="space-y-space-sm">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">auto_stories</span>
+            <span class="font-hud-micro text-xs text-primary font-semibold uppercase tracking-wider">ACADEMIC GENESIS</span>
+          </div>
+          <h3 class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold">The Path from Schooling to Sir Isaac Newton College</h3>
+          <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+            I completed my early schooling at <strong class="text-[#F5F1E8]">Vivekanand Matric Hr. Sec. School</strong> in Sirkazhi and my higher secondary education at <strong class="text-[#F5F1E8]">Adharsh Matric Hr. Sec. School</strong> in Nagapattinam. In 2026, I started my B.E. Electronics and Communication Engineering journey at <strong class="text-primary">Sir Isaac Newton College</strong>.
+          </p>
+          <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Nagapattinam is home, and this technical journey is anchored in curiosity: discovering how semiconductor gates dictate high-level software abstractions.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 pt-2 font-telemetry-mono text-xs">
+          <span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-[#F5F1E8] border border-outline-variant">SIRKAZHI</span>
+          <span class="text-on-surface-variant">→</span>
+          <span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-[#F5F1E8] border border-outline-variant">NAGAPATTINAM</span>
+          <span class="text-on-surface-variant">→</span>
+          <span class="px-2.5 py-1 rounded-lg bg-primary/15 border border-primary/40 text-primary font-bold">B.E. ECE (2026–2030)</span>
+        </div>
+      </div>
+
+      <!-- Core Curiosity -->
+      <div class="md:col-span-5 rounded-2xl bg-surface-container p-space-lg shadow-xl border border-outline-variant flex flex-col justify-between space-y-space-md">
+        <div class="space-y-space-sm">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-[20px]">terminal</span>
+            <span class="font-hud-micro text-xs text-secondary font-semibold uppercase tracking-wider">CREATIVE CURIOSITY</span>
+          </div>
+          <h3 class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold">What Excites Me Every Day</h3>
+          <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+            I’m deeply interested in technology, modern web development, creative UI, kinetic animations, clean programming, AI-assisted development, and continuously learning emerging tech stacks.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-2 font-telemetry-mono text-xs">
+          <div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8]">• Web Animation</div>
+          <div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8]">• Creative Coding</div>
+          <div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8]">• ECE Fundamentals</div>
+          <div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8]">• AI Workflows</div>
+        </div>
+      </div>
+
+      <!-- Technical Mindset Matrix -->
+      <div class="md:col-span-12 rounded-2xl bg-surface-container-high p-space-lg shadow-xl border border-outline-variant">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+          <div class="space-y-2">
+            <span class="font-hud-micro text-xs text-primary uppercase tracking-wider font-semibold">01 / HARDWARE DISCIPLINE</span>
+            <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold">Electronics Grounding</h4>
+            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+              Learning signal pathways, semiconductor fundamentals, binary arithmetic, and circuit principles builds an instinct for computing performance and system constraints.
+            </p>
+          </div>
+          <div class="space-y-2">
+            <span class="font-hud-micro text-xs text-secondary uppercase tracking-wider font-semibold">02 / VISUAL CHOREOGRAPHY</span>
+            <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold">Creative Web Craft</h4>
+            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+              Applying scroll telemetry, CSS keyframe orchestrations, and interactive canvas components to build web experiences that feel alive, fluid, and memorable.
+            </p>
+          </div>
+          <div class="space-y-2">
+            <span class="font-hud-micro text-xs text-primary uppercase tracking-wider font-semibold">03 / REALISTIC TRAJECTORY</span>
+            <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold">Zero Fluff, 100% Truth</h4>
+            <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+              No inflated corporate titles, no fake client counts. Just an ambitious student engineer learning by writing code, breaking things, and publishing real open-source experiments.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 03: EDUCATION TIMELINE (#education) -->
+<section class="w-full bg-[#0A0A0B] py-space-3xl relative border-t border-outline-variant" id="education">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <div class="space-y-1">
+      <span class="font-hud-micro text-xs text-primary tracking-widest uppercase font-semibold">03 // TIMELINE</span>
+      <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold tracking-tight">Academic Foundation</h2>
+      <p class="font-body-md text-sm sm:text-base text-on-surface-variant max-w-lg">
+        The educational milestones and institutions that shaped my scientific thinking and technical path.
+      </p>
+    </div>
+
+    <div class="relative space-y-space-md">
+      <!-- Milestone 1 -->
+      <div class="group relative rounded-2xl bg-surface-container/90 backdrop-blur-xl p-space-lg shadow-xl border border-outline-variant hover:border-primary/50 transition-all duration-300">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-2.5 border-b border-outline-variant">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-high border border-outline-variant font-hud-micro text-[11px] text-on-surface-variant font-semibold">PHASE 01</span>
+            <span class="px-2.5 py-1 rounded-lg bg-surface-container-lowest/80 border border-outline-variant font-telemetry-mono text-xs text-on-surface-variant font-semibold">LKG – 8TH GRADE</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-on-surface-variant font-hud-micro text-xs uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[15px] text-primary/80">verified</span>
+            <span>COMPLETED • SIRKAZHI</span>
+          </div>
+        </div>
+        <div class="pt-space-sm">
+          <h3 class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold tracking-tight">Vivekanand Matric Hr. Sec. School</h3>
+          <p class="font-body-md text-sm sm:text-base text-on-surface-variant mt-1.5 leading-relaxed max-w-3xl">
+            Primary and middle school foundation in Sirkazhi. Built early mathematical intuition, scientific interest, and foundational logic.
+          </p>
+        </div>
+      </div>
+
+      <!-- Milestone 2 -->
+      <div class="group relative rounded-2xl bg-surface-container/90 backdrop-blur-xl p-space-lg shadow-xl border border-outline-variant hover:border-secondary/50 transition-all duration-300">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-2.5 border-b border-outline-variant">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-high border border-outline-variant font-hud-micro text-[11px] text-secondary font-semibold">PHASE 02</span>
+            <span class="px-2.5 py-1 rounded-lg bg-surface-container-lowest/80 border border-outline-variant font-telemetry-mono text-xs text-secondary/90 font-semibold">9TH – 12TH GRADE</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-on-surface-variant font-hud-micro text-xs uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[15px] text-secondary">verified</span>
+            <span>COMPLETED • NAGAPATTINAM</span>
+          </div>
+        </div>
+        <div class="pt-space-sm">
+          <h3 class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold tracking-tight">Adharsh Matric Hr. Sec. School</h3>
+          <p class="font-body-md text-sm sm:text-base text-on-surface-variant mt-1.5 leading-relaxed max-w-3xl">
+            Secondary &amp; Higher Secondary education in Nagapattinam. Focused on Physics, Mathematics, and Computer Science foundations, igniting a passion for digital systems.
+          </p>
+        </div>
+      </div>
+
+      <!-- Milestone 3: Active Undergrad -->
+      <div class="group relative rounded-2xl bg-gradient-to-br from-[#1A0E0C] via-[#221413] to-[#120A09] backdrop-blur-2xl p-space-lg shadow-2xl border-2 border-primary/50 hover:border-primary transition-all duration-300">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-primary/25">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-primary text-on-primary font-hud-micro text-xs font-bold tracking-wider shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-on-primary animate-pulse"></span>
+              PHASE 03 // ACTIVE
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-surface-container-lowest/90 border border-primary/40 font-telemetry-mono text-xs text-primary font-bold shadow-inner">2026 – 2030</span>
+            <span class="font-hud-micro text-[11px] text-primary/90 bg-surface-container-high/80 px-2 py-0.5 rounded border border-outline-variant">NODE: SINCE-ECE-2026</span>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/40 font-hud-micro text-xs text-primary uppercase tracking-wider font-bold">
+            <span class="h-2 w-2 rounded-full bg-primary animate-ping"></span>
+            <span>ENROLLED • IN PROGRESS</span>
+          </div>
+        </div>
+        <div class="pt-space-md">
+          <h3 class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold tracking-tight">Sir Isaac Newton College • B.E. Electronics &amp; Communication Engineering (ECE)</h3>
+          <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed max-w-4xl mt-2">
+            Nagapattinam. Undergoing four-year engineering curriculum covering electronic circuits, signals &amp; systems, digital signal processing, microcontrollers, and communication protocols alongside independent web engineering practice.
+          </p>
+          <div class="mt-space-md grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-hud-micro text-xs">
+            <div class="rounded-xl bg-surface-container/90 border border-outline-variant p-3 text-center">
+              <div class="text-[10px] text-on-surface-variant font-telemetry-mono uppercase mb-0.5">MODULE 01</div>
+              <div class="text-[#F5F1E8] font-semibold">ELECTRONIC CIRCUITS</div>
+            </div>
+            <div class="rounded-xl bg-surface-container/90 border border-outline-variant p-3 text-center">
+              <div class="text-[10px] text-on-surface-variant font-telemetry-mono uppercase mb-0.5">MODULE 02</div>
+              <div class="text-[#F5F1E8] font-semibold">DIGITAL LOGIC</div>
+            </div>
+            <div class="rounded-xl bg-surface-container/90 border border-outline-variant p-3 text-center">
+              <div class="text-[10px] text-on-surface-variant font-telemetry-mono uppercase mb-0.5">MODULE 03</div>
+              <div class="text-[#F5F1E8] font-semibold">SIGNALS &amp; SYSTEMS</div>
+            </div>
+            <div class="rounded-xl bg-primary/10 border border-primary/40 p-3 text-center">
+              <div class="text-[10px] text-primary/90 font-telemetry-mono uppercase mb-0.5">CORE FOCUS</div>
+              <div class="text-primary font-bold">CREATIVE CODE • LAB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: VERIFIED SKILLS MATRIX (#skills) -->
+<section class="w-full bg-[#0F0F12] py-space-3xl relative border-t border-outline-variant" id="skills">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+      <div class="space-y-1">
+        <span class="font-hud-micro text-xs text-secondary tracking-widest uppercase font-semibold">04 // CAPABILITIES</span>
+        <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold tracking-tight">Tools I Use. Things I’m Learning.</h2>
+      </div>
+      <p class="font-body-sm text-xs sm:text-sm text-on-surface-variant max-w-sm">
+        Strictly verified capabilities based on actual code and current academic coursework. No inflated percentages.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+      <!-- Frontend Engineering -->
+      <div class="rounded-2xl bg-surface-container p-5 sm:p-6 shadow-2xl border border-primary/30 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant font-hud-micro text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-primary/40 flex items-center justify-center text-primary shadow-inner">
+                <span class="material-symbols-outlined text-[18px]">code</span>
+              </div>
+              <span class="font-bold text-[#F5F1E8] text-base font-headline-md">Frontend Engineering</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-md bg-primary/15 border border-primary/30 font-hud-micro text-[10px] text-primary font-bold uppercase">CORE STACK</span>
+          </div>
+          <div class="space-y-2.5">
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">HTML5 &amp; Semantic Web</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Accessible structure, clean document hierarchy</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-primary/10 border border-primary/30 font-hud-micro text-[10px] text-primary shrink-0">VERIFIED</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">CSS3 &amp; Modern Layouts</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Flexbox, CSS Grid, custom variables, responsive design</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-primary/10 border border-primary/30 font-hud-micro text-[10px] text-primary shrink-0">VERIFIED</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">JavaScript (ES6+)</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">DOM manipulation, event listeners, timing functions</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-primary/10 border border-primary/30 font-hud-micro text-[10px] text-primary shrink-0">VERIFIED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Creative Development -->
+      <div class="rounded-2xl bg-surface-container p-5 sm:p-6 shadow-2xl border border-secondary/30 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant font-hud-micro text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-secondary/40 flex items-center justify-center text-secondary shadow-inner">
+                <span class="material-symbols-outlined text-[18px]">animation</span>
+              </div>
+              <span class="font-bold text-[#F5F1E8] text-base font-headline-md">Creative Development</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-md bg-secondary/15 border border-secondary/30 font-hud-micro text-[10px] text-secondary font-bold uppercase">EXPERIMENTS</span>
+          </div>
+          <div class="space-y-2.5">
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">Scroll-Driven Animations</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Scroll depth choreography, window scroll event listeners</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-secondary/10 border border-secondary/30 font-hud-micro text-[10px] text-secondary shrink-0">APPLIED</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">CSS Keyframe Choreography</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Smooth transitions, cubic-bezier timing curves, physics feel</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-secondary/10 border border-secondary/30 font-hud-micro text-[10px] text-secondary shrink-0">APPLIED</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">Interactive Canvas &amp; SVG</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Vector animation, dynamic 2D canvas drawing loops</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-secondary/10 border border-secondary/30 font-hud-micro text-[10px] text-secondary shrink-0">APPLIED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools & Workflow -->
+      <div class="rounded-2xl bg-surface-container p-5 sm:p-6 shadow-2xl border border-primary/30 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant font-hud-micro text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-primary/40 flex items-center justify-center text-primary shadow-inner">
+                <span class="material-symbols-outlined text-[18px]">build</span>
+              </div>
+              <span class="font-bold text-[#F5F1E8] text-base font-headline-md">Tools &amp; Workflow</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-md bg-primary/15 border border-primary/30 font-hud-micro text-[10px] text-primary font-bold uppercase">DAILY TOOLING</span>
+          </div>
+          <div class="space-y-2.5">
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">Git &amp; GitHub Ecosystem</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Version control, repository management, GitHub Pages</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-primary/10 border border-primary/30 font-hud-micro text-[10px] text-primary shrink-0">ACTIVE</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">VS Code &amp; Extensions</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Configured workspace, terminal integration, linting</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-primary/10 border border-primary/30 font-hud-micro text-[10px] text-primary shrink-0">ACTIVE</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">AI-Assisted Workflows</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Accelerated code scaffolding, debugging, and learning</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-primary/10 border border-primary/30 font-hud-micro text-[10px] text-primary shrink-0">ACTIVE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Currently Exploring -->
+      <div class="rounded-2xl bg-surface-container p-5 sm:p-6 shadow-2xl border border-secondary/30 flex flex-col justify-between">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant font-hud-micro text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-secondary/40 flex items-center justify-center text-secondary shadow-inner">
+                <span class="material-symbols-outlined text-[18px]">explore</span>
+              </div>
+              <span class="font-bold text-[#F5F1E8] text-base font-headline-md">Currently Exploring</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-md bg-secondary/15 border border-secondary/30 font-hud-micro text-[10px] text-secondary font-bold uppercase">HORIZON</span>
+          </div>
+          <div class="space-y-2.5">
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">Embedded C &amp; Microcontrollers</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">ECE core: GPIO, timers, UART, hardware interrupts</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-secondary/10 border border-secondary/30 font-hud-micro text-[10px] text-secondary shrink-0">CURRICULUM</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">WebGL &amp; Shader Basics</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">GLSL fragment shaders, 3D math &amp; hardware acceleration</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-secondary/10 border border-secondary/30 font-hud-micro text-[10px] text-secondary shrink-0">SELF-STUDY</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-between">
+              <div>
+                <div class="font-telemetry-mono text-xs sm:text-sm text-[#F5F1E8] font-semibold">Component-Based Frameworks</div>
+                <div class="font-body-sm text-xs text-on-surface-variant mt-0.5">Exploring modular UI architecture for scalable web apps</div>
+              </div>
+              <span class="px-2 py-1 rounded-md bg-secondary/10 border border-secondary/30 font-hud-micro text-[10px] text-secondary shrink-0">LEARNING</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 05: FEATURED PROJECTS SECTION (#projects) -->
+<section class="w-full bg-[#0A0A0B] py-space-3xl relative border-t border-outline-variant" id="projects">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+      <div class="space-y-1">
+        <span class="font-hud-micro text-xs text-primary tracking-widest uppercase font-semibold">05 // REPOSITORIES</span>
+        <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold tracking-tight">Things I’ve Built.</h2>
+      </div>
+      <a class="inline-flex items-center gap-1.5 font-telemetry-mono text-xs text-primary hover:text-white transition-colors" href="https://github.com/mohamedidris0429?tab=repositories" rel="noopener noreferrer" target="_blank">
+        <span>VIEW ALL ON GITHUB</span>
+        <span>↗</span>
+      </a>
+    </div>
+
+    <div class="space-y-space-lg">
+      <!-- Project 01: BIKE SCROLL ANIMATION -->
+      <div class="group relative rounded-2xl bg-surface-container p-5 sm:p-7 shadow-2xl border border-primary/30 hover:border-primary transition-all duration-300">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 space-y-3.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md bg-surface-container-lowest font-telemetry-mono text-xs text-primary font-bold border border-primary/40 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                PROJECT_01
+              </span>
+              <span class="px-2.5 py-1 rounded-md bg-surface-container-high font-hud-micro text-[11px] text-on-surface-variant border border-outline-variant uppercase">
+                SCROLL-DRIVEN INTERACTION
+              </span>
+            </div>
+            <h3 class="font-headline-lg text-2xl sm:text-3xl text-[#F5F1E8] font-bold tracking-tight group-hover:text-primary transition-colors">
+              BIKE SCROLL ANIMATION
+            </h3>
+            <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              An interactive scroll-linked animation experiment translating page scroll velocity and depth into frame-accurate motorcycle kinematics and kinetic typography. Explores scroll event sampling, CSS transform binding, and seamless motion.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">HTML5</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">CSS3 Animations</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">JavaScript</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Scroll Events</span>
+            </div>
+            <div class="pt-2">
+              <a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all shadow-lg shadow-primary/20" href="https://github.com/mohamedidris0429/BIKE-SCROLL-ANIMATION" rel="noopener noreferrer" target="_blank">
+                <span>Repository on GitHub</span>
+                <span class="text-[11px]">↗</span>
+              </a>
+            </div>
+          </div>
+          <div class="lg:col-span-5 rounded-xl bg-surface-container-lowest p-3 shadow-2xl border border-outline-variant flex flex-col justify-between h-72 overflow-hidden relative">
+            <div class="flex items-center justify-between font-hud-micro text-[11px] text-on-surface-variant pb-2 border-b border-outline-variant z-10">
+              <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant">
+                <span class="h-2 w-2 rounded-full bg-primary animate-ping"></span>
+                <span class="text-[#F5F1E8] font-semibold">TELEMETRY: KINEMATICS</span>
+              </div>
+              <span class="text-primary font-telemetry-mono font-bold px-2 py-0.5 rounded bg-primary/10 border border-primary/30">84.6 KM/H</span>
+            </div>
+            <div class="relative my-auto w-full h-48 rounded-lg overflow-hidden border border-outline-variant bg-surface-container flex items-center justify-center">
+              <img alt="Bajaj Pulsar Kinetic Scroll Model" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLCNtTWhiPIOmBz74gUW5dgdJQa9Ct2ebGcH_SvS02DHQcO9-BaPuHcQ-uuNJq8BqoAaCssDQclFcS3T1APeSkKF04w6DN5_NRlWQm5uUHwzyhYq2RpT5d-mrZgef_9wRSVFqfyA78W5Tea6320wah2wjyHwNRwGKGBhfDQMcU4QCOhiWLio-6GuskvhvzlX1-jicokK3unImUv9qWZP_Ntkgs2EMStKR9wdlhIU8">
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060607]/90 via-transparent to-transparent"></div>
+            </div>
+            <div class="flex items-center justify-between font-telemetry-mono text-[11px] text-on-surface-variant pt-2 border-t border-outline-variant z-10">
+              <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>GEAR: 5TH [48/16]</span>
+              <span class="text-primary font-semibold">SCROLL_SYNC: 60 FPS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 02: CAR SCROLL ANIMATION -->
+      <div class="group relative rounded-2xl bg-surface-container p-5 sm:p-7 shadow-2xl border border-secondary/30 hover:border-secondary transition-all duration-300">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 space-y-3.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md bg-surface-container-lowest font-telemetry-mono text-xs text-secondary font-bold border border-secondary/40 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                PROJECT_02
+              </span>
+              <span class="px-2.5 py-1 rounded-md bg-surface-container-high font-hud-micro text-[11px] text-on-surface-variant border border-outline-variant uppercase">
+                CINEMATIC WEB EXPERIENCE
+              </span>
+            </div>
+            <h3 class="font-headline-lg text-2xl sm:text-3xl text-[#F5F1E8] font-bold tracking-tight group-hover:text-secondary transition-colors">
+              CAR SCROLL ANIMATION
+            </h3>
+            <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              Immersive automotive web presentation featuring synchronized scroll mechanics, dynamic road perspective simulation, and responsive visual transitions engineered purely with standard web technologies.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">HTML5</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Modern CSS Flex/Grid</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">JavaScript Logic</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Motion Choreography</span>
+            </div>
+            <div class="pt-2">
+              <a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-[#180403] font-telemetry-mono text-xs font-bold hover:bg-[#FFC098] transition-all shadow-lg shadow-secondary/20" href="https://github.com/mohamedidris0429/CAR-SCROLL-ANIMATION" rel="noopener noreferrer" target="_blank">
+                <span>Repository on GitHub</span>
+                <span class="text-[11px]">↗</span>
+              </a>
+            </div>
+          </div>
+          <div class="lg:col-span-5 rounded-xl bg-surface-container-lowest p-3 shadow-2xl border border-outline-variant flex flex-col justify-between h-72 overflow-hidden relative">
+            <div class="flex items-center justify-between font-hud-micro text-[11px] text-on-surface-variant pb-2 border-b border-outline-variant z-10">
+              <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-high border border-outline-variant">
+                <span class="h-2 w-2 rounded-full bg-secondary animate-ping"></span>
+                <span class="text-[#F5F1E8] font-semibold">HUD: AUTOMOTIVE KINETICS</span>
+              </div>
+              <span class="text-secondary text-[10px] font-bold px-2 py-0.5 rounded bg-secondary/10 border border-secondary/30">ROAD_SIM // ACTIVE</span>
+            </div>
+            <div class="relative my-auto w-full h-48 rounded-lg overflow-hidden border border-outline-variant bg-surface-container flex items-center justify-center">
+              <img alt="Aventador SVJ Simulation Model" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUxlURSMmIf3wcnp-rzDepSk8SC59WbkaFlgrBvM28otKaGxyktx-UEAyiw3hgwB09yGUbQoxUbcsbTavSSpr0SieCeF_NKjhy0bE3BlfkIerCGSQCnq8QivqT_qp1gZa6Grb0FN7Ddu_YU1g5carSRxIw4a7JRtOTuf55DQlx4XNsujAVndkFCne-Jr-Jlm8vFLUrcOCRI3SIMfy6d33A_cfLvDAu0AySoOE1XbU">
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060607]/90 via-transparent to-transparent"></div>
+            </div>
+            <div class="flex items-center justify-between font-telemetry-mono text-[11px] text-on-surface-variant pt-2 border-t border-outline-variant z-10">
+              <span class="text-[#F5F1E8] font-semibold">TACHOMETER: <strong class="text-secondary font-bold">6800 RPM</strong></span>
+              <span class="text-primary font-semibold">V12 ENGINE: ACTIVE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 03: DEVELOPER PROFILE / ABOUT ME -->
+      <div class="group rounded-2xl bg-surface-container p-space-lg shadow-xl hover:bg-surface-container-high transition-all border border-outline-variant">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+          <div class="lg:col-span-7 space-y-space-sm">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-surface-container-lowest font-telemetry-mono text-xs text-primary font-bold border border-outline-variant">PROJECT_03</span>
+              <span class="px-2.5 py-0.5 rounded-md bg-surface-container-lowest font-hud-micro text-[11px] text-on-surface-variant border border-outline-variant">IDENTITY REPOSITORY</span>
+            </div>
+            <h3 class="font-headline-lg text-2xl sm:text-3xl text-[#F5F1E8] font-bold">DEVELOPER PROFILE / ABOUT ME</h3>
+            <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              Developer landing page and GitHub profile ecosystem consolidating technical journey logs, verified repositories, educational background, and contact endpoints.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Markdown</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">GitHub Profile README</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Web Standards</span>
+            </div>
+            <div class="pt-space-sm">
+              <a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-high text-[#F5F1E8] border border-outline-variant font-telemetry-mono text-xs font-bold hover:border-primary hover:text-primary transition-colors" href="https://github.com/mohamedidris0429/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+                <span>Repository on GitHub</span>
+                <span class="text-[10px] text-primary">↗</span>
+              </a>
+            </div>
+          </div>
+          <!-- Terminal CLI Simulation -->
+          <div class="lg:col-span-5 rounded-xl bg-surface-container-lowest p-space-md shadow-inner flex flex-col justify-between h-64 overflow-hidden border border-outline-variant">
+            <div class="flex items-center justify-between border-b border-outline-variant pb-2 font-hud-micro text-xs text-on-surface-variant">
+              <div class="flex items-center gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-[#FFA66B]"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-[#E5B560]"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-[#FF4033]"></span>
+                <span class="ml-2 font-semibold text-[#F5F1E8]">zsh — mohamedidris0429@neural:~</span>
+              </div>
+              <span class="text-primary font-telemetry-mono text-[10px]">TTY-01</span>
+            </div>
+            <div class="my-auto space-y-2 font-telemetry-mono text-xs text-on-surface-variant">
+              <div class="flex items-center gap-1 text-primary">
+                <span class="text-on-surface-variant">$</span>
+                <span>curl -s https://api.github.com/users/mohamedidris0429</span>
+              </div>
+              <div class="text-on-surface pl-2 border-l border-primary/40">
+                <span class="text-on-surface-variant">role:</span> <span class="text-[#F5F1E8]">"ECE Student &amp; Creative Developer"</span>
+              </div>
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="text-on-surface-variant">$</span>
+                <span>git log --oneline -n 1 --decorate</span>
+              </div>
+              <div class="text-on-surface-variant pl-2 border-l border-secondary/40">
+                <span class="text-[#F5F1E8] font-bold">c429a1f</span> (HEAD -&gt; main) chore: neural design system
+              </div>
+              <div class="flex items-center gap-1 text-[#F5F1E8] font-bold">
+                <span class="text-primary">mohamedidris@neural:~$</span>
+                <span class="text-primary animate-pulse">ready_</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between font-telemetry-mono text-[10px] text-on-surface-variant pt-2 border-t border-outline-variant">
+              <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>STATUS: 200 OK</span>
+              <span class="text-primary">UPTIME: 99.98% • SYNCED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 04: INDUSTRIA — Smart Industrial Machine Monitoring System -->
+      <div class="group rounded-2xl bg-surface-container p-space-lg shadow-xl hover:bg-surface-container-high transition-all border border-outline-variant hover:border-primary/40">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+          <div class="lg:col-span-7 space-y-space-sm">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-surface-container-lowest font-telemetry-mono text-xs text-primary font-bold border border-outline-variant">PROJECT_04</span>
+              <span class="px-2.5 py-0.5 rounded-md bg-surface-container-lowest font-hud-micro text-[11px] text-secondary tracking-wider border border-outline-variant">INDUSTRIAL IOT &amp; ECE TELEMETRY</span>
+            </div>
+            <h3 class="font-headline-lg text-2xl sm:text-3xl text-[#F5F1E8] font-bold">INDUSTRIA — Smart Industrial Machine Monitoring System</h3>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest border border-outline-variant">
+              <span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span class="font-hud-micro text-[11px] text-primary font-semibold uppercase tracking-wider">Project Status: Software Prototype • Simulation Mode</span>
+            </div>
+            <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              An ECE-focused industrial IoT software prototype designed to demonstrate how machine parameters such as temperature, vibration, current and voltage can be monitored through an interactive dashboard.
+            </p>
+            <div class="space-y-1 pt-1">
+              <span class="font-hud-micro text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold">Future Development:</span>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant font-hud-micro text-[10px] text-secondary">ESP32</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant font-hud-micro text-[10px] text-secondary">Sensors</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant font-hud-micro text-[10px] text-secondary">MQTT</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant font-hud-micro text-[10px] text-secondary">Cloud/API</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-surface-container-high border border-outline-variant font-hud-micro text-[10px] text-secondary">Anomaly Detection</span>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">HTML</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">CSS</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">JavaScript</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">IoT Concept</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Data Visualization</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5 pt-space-sm">
+              <a class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all shadow-md shadow-primary/20" href="https://mohamedidris0429.github.io/INDUSTRIA/" rel="noopener noreferrer" target="_blank">
+                <span>Live Demo</span>
+                <span class="text-[10px]">↗</span>
+              </a>
+              <a class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-surface-container-high text-[#F5F1E8] font-telemetry-mono text-xs font-bold hover:border-primary hover:text-primary transition-all border border-outline-variant" href="https://github.com/mohamedidris0429/INDUSTRIA" rel="noopener noreferrer" target="_blank">
+                <span>Repository on GitHub</span>
+                <span class="text-[10px] text-primary">↗</span>
+              </a>
+            </div>
+          </div>
+          <!-- SCADA Dashboard Preview -->
+          <div class="lg:col-span-5 rounded-xl bg-surface-container-lowest p-space-md shadow-inner flex flex-col justify-between h-72 overflow-hidden relative border border-outline-variant">
+            <img alt="INDUSTRIA Smart Industrial Machine Monitoring System" class="w-full h-full object-cover object-center absolute inset-0 opacity-40 group-hover:scale-105 transition-transform duration-700 pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5GIhnzfzgc_4KfOvVN2SoO2nI_VD2VxotYHW9ri3TyPi2_INR5fPcBrncBFrC318fCdiz6cXQ_Qe1pxcWdQdiWrwv9vEuLJ2NB2klMZ7wx9aD8Ko3_ub_4tqgSXM5_JJ3MObNrv-Q7RM133FJf6MxWgqjxOeEK9fV3QURNf6AzmXvJoTrZsqZk6PB31TI5GZ_znvDSHZFyvwu8knzvtapHiB1QruTp5ZmxOk4gPc">
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/75 to-[#0A0A0B]/85"></div>
+            <div class="flex items-center justify-between font-hud-micro text-[11px] text-on-surface-variant pb-2 border-b border-outline-variant relative z-10">
+              <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-surface-container-lowest/80 border border-outline-variant">
+                <span class="h-2 w-2 rounded-full bg-primary animate-ping"></span>
+                <span class="text-[#F5F1E8] font-bold">SCADA / IOT RIG</span>
+              </div>
+              <span class="text-secondary text-[10px] font-semibold">TURBINE_ACTIVE</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 my-auto py-1 relative z-10">
+              <div class="rounded-xl bg-surface-container-low/90 p-2.5 border border-outline-variant space-y-1">
+                <div class="flex items-center justify-between font-hud-micro text-[10px] text-on-surface-variant"><span>TEMP</span><span class="text-primary font-bold">74.2 °C</span></div>
+                <div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width: 68%;"></div></div>
+              </div>
+              <div class="rounded-xl bg-surface-container-low/90 p-2.5 border border-outline-variant space-y-1">
+                <div class="flex items-center justify-between font-hud-micro text-[10px] text-on-surface-variant"><span>VIB</span><span class="text-secondary font-bold">1.42 mm/s</span></div>
+                <div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden"><div class="bg-secondary h-full rounded-full" style="width: 44%;"></div></div>
+              </div>
+              <div class="rounded-xl bg-surface-container-low/90 p-2.5 border border-outline-variant space-y-1">
+                <div class="flex items-center justify-between font-hud-micro text-[10px] text-on-surface-variant"><span>BUS</span><span class="text-primary font-bold">415.8 V</span></div>
+                <div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width: 82%;"></div></div>
+              </div>
+              <div class="rounded-xl bg-surface-container-low/90 p-2.5 border border-outline-variant space-y-1">
+                <div class="flex items-center justify-between font-hud-micro text-[10px] text-on-surface-variant"><span>LOAD</span><span class="text-secondary font-bold">18.6 A</span></div>
+                <div class="w-full bg-surface-container-lowest h-1.5 rounded-full overflow-hidden"><div class="bg-secondary h-full rounded-full" style="width: 62%;"></div></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between font-telemetry-mono text-[10px] text-on-surface-variant pt-2 border-t border-outline-variant relative z-10">
+              <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>SENSOR: ESP32_VIRTUAL</span>
+              <span class="text-primary">POLL: 100ms • OK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 05: SMART SECOND-LIFE EV BATTERY SYSTEM -->
+      <div class="group rounded-2xl bg-surface-container p-space-lg shadow-xl hover:bg-surface-container-high transition-all border border-outline-variant hover:border-primary/40">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center">
+          <div class="lg:col-span-7 space-y-space-sm">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-surface-container-lowest font-telemetry-mono text-xs text-primary font-bold border border-outline-variant">PROJECT_05</span>
+              <span class="px-2.5 py-0.5 rounded-md bg-surface-container-lowest font-hud-micro text-[11px] text-primary tracking-wider border border-outline-variant">CLEAN ENERGY &amp; BMS TELEMETRY</span>
+            </div>
+            <h3 class="font-headline-lg text-2xl sm:text-3xl text-[#F5F1E8] font-bold">SMART SECOND-LIFE EV BATTERY SYSTEM</h3>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest border border-outline-variant">
+              <span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+              <span class="font-hud-micro text-[11px] text-primary font-semibold uppercase tracking-wider">Project Status: Digital Prototype • Simulation Mode</span>
+            </div>
+            <p class="font-body-md text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              A smart digital prototype for reusing degraded EV batteries as solar energy storage and automatic emergency home backup power.
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">HTML5</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">CSS3</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">JavaScript</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">IoT Concept</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Solar Energy</span>
+              <span class="px-3 py-1 rounded-lg bg-surface-container-low font-telemetry-mono text-xs text-[#F5F1E8] border border-outline-variant">Battery Management</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5 pt-space-sm">
+              <a class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all shadow-md shadow-primary/20" href="https://github.com/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+                <span>Live Demo</span>
+                <span class="text-[10px]">↗</span>
+              </a>
+              <a class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-surface-container-high text-[#F5F1E8] font-telemetry-mono text-xs font-bold hover:border-primary hover:text-primary transition-all border border-outline-variant" href="https://github.com/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+                <span>Repository on GitHub</span>
+                <span class="text-[10px] text-primary">↗</span>
+              </a>
+            </div>
+          </div>
+          <!-- EV Battery Preview -->
+          <div class="lg:col-span-5 rounded-xl bg-surface-container-lowest p-2 shadow-inner h-72 overflow-hidden relative border border-outline-variant">
+            <img alt="Smart Second-Life EV Battery System Dashboard" class="w-full h-full object-cover object-center rounded-lg transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxW8q-IFsHdG-cvZIMwGwDwZnXAt-JDVFS-p4_hef4dlg7FTznpqk84XQ_BttytUv5E-IG29nYbZhqICy5i3UotJc3cJX4kzIGdLkSIU3p-Tk6sxzPuEqRU_hKp6Tb6XCHfDBolI2buQVq9Vg_Iu7tNhAB4xIusHqzqkYIk6DE1btHGCsBct9hprxFmPe2KbY_uEBUtQvovvZ1YonYHd99Tr2ow5y1pYUOe6ocYXY">
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0A0A0B]/80 via-transparent to-transparent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section><!-- SECTION: CERTIFICATIONS & VERIFIED HONORS (#certifications) -->
+<section class="w-full bg-[#0A0A0B] py-space-3xl relative border-t border-outline-variant" id="certifications">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <!-- Header with Telemetry & Owner Badge -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2 font-hud-micro text-xs text-primary tracking-widest uppercase font-semibold">
+          <span>06 // CREDENTIALS &amp; VERIFICATION</span>
+          <span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+          <span>HASH_SHA256: SECURE</span>
+        </div>
+        <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold tracking-tight">
+          Certifications &amp; Verified Honors
+        </h2>
+      </div>
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant font-hud-micro text-xs text-on-surface-variant flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-primary"></span>
+          <span id="cert-counter-label">4 VERIFIED CREDENTIALS</span>
+        </span>
+        <button onclick="openOwnerPortal()" id="cert-owner-portal-btn" class="px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary/50 text-on-surface-variant hover:text-primary font-hud-micro text-xs flex items-center gap-1.5 transition-all shadow-sm group" title="Restricted Owner Portal"><span class="material-symbols-outlined text-[15px] text-primary/70 group-hover:text-primary transition-colors">lock</span><span class="tracking-wider">[Owner Portal]</span></button>
+      </div>
+    </div>
+    <p class="font-body-md text-sm sm:text-base text-on-surface-variant max-w-2xl leading-relaxed">
+      Verified technical proficiencies, specialized hardware/software coursework, and industry recognitions. Each certificate is cryptographically indexed and open for peer verification.
+    </p>
+
+    <!-- Filter Bar -->
+    <div class="flex flex-wrap items-center gap-2 border-b border-outline-variant pb-space-sm" id="cert-filter-bar">
+      <button onclick="filterCertificates('all', this)" class="cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs font-bold transition-all bg-primary text-on-primary shadow-sm">ALL CREDENTIALS</button>
+      <button onclick="filterCertificates('ece', this)" class="cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">ECE &amp; EMBEDDED</button>
+      <button onclick="filterCertificates('web', this)" class="cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">CREATIVE CODE &amp; WEB</button>
+      <button onclick="filterCertificates('iot', this)" class="cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">INDUSTRIAL IOT</button>
+      <button onclick="filterCertificates('academic', this)" class="cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">ACADEMIC CORE</button>
+    </div>
+
+    <!-- Certifications Interactive Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg" id="certifications-grid">
+      <div class="col-span-full p-8 rounded-2xl bg-surface-container border border-outline-variant text-center space-y-2">
+        <span class="material-symbols-outlined text-3xl text-primary/70 animate-pulse">sync</span>
+        <p class="font-headline-md text-base text-[#F5F1E8]">Loading verified credentials…</p>
+        <p class="font-hud-micro text-xs text-on-surface-variant">Connecting to the secure certificate registry.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SECTION 06: ENGINEERING PHILOSOPHY & LEARNING JOURNEY (#learning) -->
+<section class="w-full bg-[#0F0F12] py-space-3xl relative border-t border-outline-variant" id="learning">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-xl">
+    <div class="text-center max-w-xl mx-auto space-y-2">
+      <span class="font-hud-micro text-xs text-primary tracking-widest uppercase font-semibold">ENGINEERING PHILOSOPHY</span>
+      <h2 class="font-headline-lg text-3xl sm:text-4xl text-[#F5F1E8] font-bold">Building. Learning. Repeating.</h2>
+      <p class="font-body-md text-sm text-on-surface-variant">My disciplined 4-stage loop as a student engineer. Hands-on coding paired with deliberate conceptual study.</p>
+    </div>
+
+    <!-- 4-Stage Connected Loop -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="rounded-2xl bg-surface-container p-5 border border-outline-variant relative">
+        <div class="font-telemetry-mono text-xs text-primary font-bold mb-1">01</div>
+        <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold mb-2">LEARN</h4>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">Understand core engineering concepts, dissect documentation, read W3C specs, and study modern web standards from first principles.</p>
+      </div>
+      <div class="rounded-2xl bg-surface-container p-5 border border-outline-variant relative">
+        <div class="font-telemetry-mono text-xs text-secondary font-bold mb-1">02</div>
+        <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold mb-2">BUILD</h4>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">Translate abstract ideas into real working code. Test responsive behaviors across viewports and engineer fluid user interactions.</p>
+      </div>
+      <div class="rounded-2xl bg-surface-container p-5 border border-outline-variant relative">
+        <div class="font-telemetry-mono text-xs text-primary font-bold mb-1">03</div>
+        <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold mb-2">EXPERIMENT</h4>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">Push creative boundaries with scroll physics, custom keyframe choreographies, and distinctive futuristic aesthetic systems.</p>
+      </div>
+      <div class="rounded-2xl bg-surface-container p-5 border border-outline-variant relative">
+        <div class="font-telemetry-mono text-xs text-secondary font-bold mb-1">04</div>
+        <h4 class="font-headline-md text-lg text-[#F5F1E8] font-bold mb-2">IMPROVE</h4>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">Refactor code, optimize performance, gather feedback from peers, and iterate toward software mastery with each repository commit.</p>
+      </div>
+    </div>
+
+    <!-- Currently Exploring Radar Matrix -->
+    <div class="rounded-2xl bg-surface-container p-space-lg border border-outline-variant mt-space-lg">
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-space-md border-b border-outline-variant gap-2">
+        <div class="flex items-center gap-2 font-hud-micro text-xs text-primary">
+          <span class="h-2 w-2 rounded-full bg-primary animate-ping"></span>
+          <span class="font-bold">RADAR // SIGNAL TELEMETRY</span>
+        </div>
+        <span class="font-hud-micro text-[11px] text-on-surface-variant">Active exploration vectors mapped across hardware-software continuum</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center pt-space-md">
+        <!-- Circular Radar Visual -->
+        <div class="md:col-span-4 flex justify-center">
+          <div class="relative w-56 h-56 rounded-full border border-primary/30 flex items-center justify-center bg-surface-container-lowest shadow-inner">
+            <div class="absolute inset-4 rounded-full border border-dashed border-outline-variant"></div>
+            <div class="absolute inset-12 rounded-full border border-primary/20"></div>
+            <div class="absolute inset-20 rounded-full border border-outline-variant"></div>
+            <div class="absolute w-full h-px bg-outline-variant"></div>
+            <div class="absolute h-full w-px bg-outline-variant"></div>
+            <!-- Rotating Sweep -->
+            <div class="absolute inset-0 rounded-full animate-spin-slow bg-gradient-to-tr from-primary/20 to-transparent"></div>
+            <span class="absolute top-8 left-10 text-[9px] font-telemetry-mono text-primary">UI/KINETICS</span>
+            <span class="absolute bottom-10 right-8 text-[9px] font-telemetry-mono text-secondary">ECE_HARDWARE</span>
+          </div>
+        </div>
+
+        <!-- Radar Sectors -->
+        <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-telemetry-mono font-bold text-[#F5F1E8]">Creative UI &amp; Micro-Interactions</span>
+              <span class="font-hud-micro text-[9px] text-primary px-1.5 py-0.5 rounded bg-primary/10">EXPERIMENTING</span>
+            </div>
+            <p class="font-body-sm text-xs text-on-surface-variant">Designing bespoke hover states, cursor physics, tactile button state transitions, and responsive layout elasticity.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-telemetry-mono font-bold text-[#F5F1E8]">Scroll &amp; Kinetic Web</span>
+              <span class="font-hud-micro text-[9px] text-secondary px-1.5 py-0.5 rounded bg-secondary/10">ACTIVE BUILDING</span>
+            </div>
+            <p class="font-body-sm text-xs text-on-surface-variant">Advancing scroll animation repositories into multi-layered kinetic web scenes with cubic bezier curves and velocity damping.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-telemetry-mono font-bold text-[#F5F1E8]">ECE Hardware &amp; Signal Logic</span>
+              <span class="font-hud-micro text-[9px] text-primary px-1.5 py-0.5 rounded bg-primary/10">FOUNDATIONAL</span>
+            </div>
+            <p class="font-body-sm text-xs text-on-surface-variant">Bridging college circuit laboratory principles with microcontrollers, digital sampling, UART/I2C communication, and embedded firmware.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-telemetry-mono font-bold text-[#F5F1E8]">AI-Assisted Development</span>
+              <span class="font-hud-micro text-[9px] text-secondary px-1.5 py-0.5 rounded bg-secondary/10">INTEGRATING</span>
+            </div>
+            <p class="font-body-sm text-xs text-on-surface-variant">Accelerating learning iterations using modern generative coding workflows, prompt-driven prototyping, and automated refactoring pipelines.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 07: CONNECT & FOOTER (#contact) -->
+<section class="w-full bg-[#0A0A0B] py-space-3xl relative border-t border-outline-variant" id="contact">
+  <div class="max-w-container-max mx-auto px-gutter-mobile lg:px-gutter-desktop space-y-space-2xl">
+    <div class="space-y-space-sm max-w-2xl">
+      <span class="font-hud-micro text-xs text-primary tracking-widest uppercase font-semibold">07 // CONNECT</span>
+      <h2 class="font-headline-lg text-4xl sm:text-5xl text-[#F5F1E8] font-bold tracking-tight">Let’s Build Something.</h2>
+      <p class="font-body-md text-base text-on-surface-variant">
+        Have an idea, project, experiment or simply want to connect? Reach out through my verified professional channels online.
+      </p>
+    </div>
+
+    <!-- Direct Connect Hub (GitHub & LinkedIn) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+      <!-- GitHub Channel -->
+      <a class="group p-space-lg rounded-2xl bg-surface-container hover:bg-surface-container-high border border-outline-variant hover:border-primary transition-all duration-300 flex flex-col justify-between space-y-space-md" href="https://github.com/mohamedidris0429" rel="noopener noreferrer" target="_blank">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-center text-primary group-hover:border-primary transition-colors">
+              <span class="font-telemetry-mono font-bold text-sm">GH</span>
+            </div>
+            <div>
+              <h3 class="font-headline-md text-lg text-[#F5F1E8] font-bold group-hover:text-primary transition-colors">GitHub</h3>
+              <p class="font-telemetry-mono text-xs text-on-surface-variant">@mohamedidris0429</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-primary group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">north_east</span>
+        </div>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+          Browse source code for my scroll animation experiments, repositories, commit history, and ongoing creative developer prototypes.
+        </p>
+        <div class="pt-space-xs border-t border-outline-variant flex items-center justify-between font-hud-micro text-[11px] text-on-surface-variant">
+          <span>REPOSITORY MATRIX</span>
+          <span class="text-primary font-bold">OPEN PROFILE ↗</span>
+        </div>
+      </a>
+
+      <!-- LinkedIn Channel -->
+      <a class="group p-space-lg rounded-2xl bg-surface-container hover:bg-surface-container-high border border-outline-variant hover:border-secondary transition-all duration-300 flex flex-col justify-between space-y-space-md" href="https://www.linkedin.com/in/mohamedidris4" rel="noopener noreferrer" target="_blank">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-surface-container-low border border-outline-variant flex items-center justify-center text-secondary group-hover:border-secondary transition-colors">
+              <span class="font-telemetry-mono font-bold text-sm">IN</span>
+            </div>
+            <div>
+              <h3 class="font-headline-md text-lg text-[#F5F1E8] font-bold group-hover:text-secondary transition-colors">LinkedIn</h3>
+              <p class="font-telemetry-mono text-xs text-on-surface-variant">/in/mohamedidris4</p>
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-secondary group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">north_east</span>
+        </div>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">
+          Connect with me for academic networking, engineering collaborations, creative web projects, or discussing emerging tech.
+        </p>
+        <div class="pt-space-xs border-t border-outline-variant flex items-center justify-between font-hud-micro text-[11px] text-on-surface-variant">
+          <span>PROFESSIONAL NETWORK</span>
+          <span class="text-secondary font-bold">CONNECT ↗</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Student Disclaimer Bar -->
+    <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-hud-micro text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+        <span class="text-[#F5F1E8] font-semibold">P. MOHAMED IDRIS • ECE STUDENT × CREATIVE DEVELOPER</span>
+      </div>
+      <span>NAGAPATTINAM // SIR ISAAC NEWTON COLLEGE (2026–2030)</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="pt-space-md pb-space-lg border-t border-outline-variant flex flex-col md:flex-row items-center justify-between gap-space-sm font-telemetry-mono text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <div class="font-headline-md text-sm font-bold text-[#F5F1E8]">P. MOHAMED IDRIS</div>
+        <span class="text-outline">/</span>
+        <span class="text-xs text-primary font-hud-micro">STATUS: CURRENTLY LEARNING &amp; BUILDING</span>
+      </div>
+      <div>
+        <span>© 2026 P. MOHAMED IDRIS. ALL RIGHTS RESERVED.</span>
+      </div>
+      <div class="font-hud-micro text-[11px] text-outline">
+        HARDWARE // SOFTWARE ARCHITECTURE SYS_REV: 04.29
+      </div>
+    </footer>
+  </div>
+</section>
+
+</main>
+
+<!-- Interactive Scripts: Dual Cursor Glow & Digital Oscilloscope Canvas -->
+<script>
+  // Mobile Nav Toggle
+  const navBtn = document.getElementById('mobile-nav-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (navBtn && mobileMenu) {
+    navBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+
+  // Cursor glow is driven by the damped follow loop in the motion engine below.
+
+  // Oscilloscope Rig Simulation
+  const canvas = document.getElementById('scopeCanvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = canvas.parentElement.clientWidth;
+    let height = canvas.height = canvas.parentElement.clientHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    });
+
+    let waveType = 'sine';
+    let frequency = 12;
+    let amplitude = 60;
+    let time = 0;
+    let mouseInfluence = { x: 0.5, y: 0.5, active: false };
+
+    const freqSlider = document.getElementById('freq-slider');
+    const ampSlider = document.getElementById('amp-slider');
+    const freqVal = document.getElementById('freq-slider-val');
+    const ampVal = document.getElementById('amp-slider-val');
+    const freqReadout = document.getElementById('freq-readout');
+
+    if (freqSlider) {
+      freqSlider.addEventListener('input', (e) => {
+        frequency = parseFloat(e.target.value);
+        freqVal.textContent = `${frequency} Hz`;
+        freqReadout.textContent = `${frequency.toFixed(1)} Hz`;
+      });
+    }
+
+    if (ampSlider) {
+      ampSlider.addEventListener('input', (e) => {
+        amplitude = parseFloat(e.target.value);
+        ampVal.textContent = `${amplitude} mV`;
+      });
+    }
+
+    const sineBtn = document.getElementById('wave-sine');
+    const squareBtn = document.getElementById('wave-square');
+    const pulseBtn = document.getElementById('wave-pulse');
+    const buttons = [sineBtn, squareBtn, pulseBtn];
+
+    function setWaveType(type, activeBtn) {
+      waveType = type;
+      buttons.forEach(b => {
+        if (!b) return;
+        b.className = "px-3 py-1 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white transition-all";
+      });
+      activeBtn.className = "px-3 py-1 rounded-lg font-hud-micro text-xs text-on-primary bg-primary font-bold transition-all shadow-sm";
+    }
+
+    if (sineBtn) sineBtn.addEventListener('click', () => setWaveType('sine', sineBtn));
+    if (squareBtn) squareBtn.addEventListener('click', () => setWaveType('square', squareBtn));
+    if (pulseBtn) pulseBtn.addEventListener('click', () => setWaveType('pulse', pulseBtn));
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseInfluence.x = (e.clientX - rect.left) / rect.width;
+      mouseInfluence.y = (e.clientY - rect.top) / rect.height;
+      mouseInfluence.active = true;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      mouseInfluence.active = false;
+    });
+
+    function draw() {
+      ctx.fillStyle = '#060607';
+      ctx.fillRect(0, 0, width, height);
+
+      // Technical Grid
+      ctx.strokeStyle = 'rgba(165, 169, 158, 0.08)';
+      ctx.lineWidth = 1;
+      const gridSize = 32;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Center Reference Axes
+      ctx.strokeStyle = 'rgba(255, 64, 51, 0.2)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, height / 2);
+      ctx.lineTo(width, height / 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(width / 2, 0);
+      ctx.lineTo(width / 2, height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Waveform Rendering
+      ctx.beginPath();
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#FF4033';
+      ctx.shadowColor = '#FF4033';
+      ctx.shadowBlur = 10;
+
+      const effectiveFreq = mouseInfluence.active ? frequency * (0.8 + mouseInfluence.x * 0.4) : frequency;
+      const effectiveAmp = mouseInfluence.active ? amplitude * (0.8 + (1 - mouseInfluence.y) * 0.4) : amplitude;
+
+      for (let x = 0; x < width; x++) {
+        const normX = x / width;
+        let y = height / 2;
+
+        if (waveType === 'sine') {
+          y += Math.sin(normX * effectiveFreq * Math.PI * 2 - time * 4) * effectiveAmp;
+        } else if (waveType === 'square') {
+          const raw = Math.sin(normX * effectiveFreq * Math.PI * 2 - time * 4);
+          y += (raw >= 0 ? 1 : -1) * effectiveAmp * 0.85;
+        } else if (waveType === 'pulse') {
+          const raw = Math.sin(normX * effectiveFreq * Math.PI * 2 - time * 4);
+          y += (raw > 0.6 ? 1 : -0.2) * effectiveAmp;
+        }
+
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      time += 0.02;
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+</script>
+
+
+
+
+
+
+
+<!-- PUBLIC CERTIFICATE VIEWER MODAL -->
+<div id="cert-viewer-modal" class="fixed inset-0 z-50 bg-[#060607]/95 backdrop-blur-2xl hidden items-center justify-center p-4">
+  <div class="relative w-full max-w-3xl rounded-2xl bg-[#0A0A0B] p-6 sm:p-8 border border-primary/40 shadow-2xl space-y-5">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="h-2 w-2 rounded-full bg-primary animate-ping"></span>
+        <span class="font-hud-micro text-xs text-primary font-bold tracking-widest uppercase">CREDENTIAL VERIFICATION VIEWPORT</span>
+      </div>
+      <button onclick="closeViewerModal()" class="text-on-surface-variant hover:text-white p-1 rounded-lg hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-[22px]">close</span>
+      </button>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+      <div class="md:col-span-6 rounded-xl overflow-hidden border border-outline-variant relative bg-surface-container-lowest h-64 flex items-center justify-center shadow-inner">
+        <img id="viewer-cert-img" src="" alt="Credential Document Preview" class="hidden w-full h-full object-cover object-center">
+        <div id="viewer-doc-fallback" class="hidden flex-col items-center justify-center gap-2 p-4 text-center">
+          <span class="material-symbols-outlined text-4xl text-primary/80">description</span>
+          <p id="viewer-doc-fallback-text" class="font-hud-micro text-[11px] text-on-surface-variant leading-relaxed">Loading document…</p>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#060607]/80 via-transparent to-transparent pointer-events-none"></div>
+        <div class="absolute bottom-2 left-3 font-hud-micro text-[10px] text-primary flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[14px]">verified</span>
+          <span id="viewer-status-badge">AUTHENTIC RECORD</span>
+        </div>
+      </div>
+      <div class="md:col-span-6 space-y-3">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-surface-container-highest border border-outline-variant font-hud-micro text-[10px] text-primary uppercase" id="viewer-cert-cat">TRACK: ECE</div>
+        <h3 id="viewer-cert-title" class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold leading-tight"></h3>
+        <p id="viewer-cert-issuer" class="font-telemetry-mono text-xs text-primary font-semibold"></p>
+        <p id="viewer-cert-desc" class="font-body-sm text-xs text-on-surface-variant leading-relaxed"></p>
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant font-telemetry-mono text-xs space-y-1">
+          <div class="text-on-surface-variant flex justify-between"><span>Issued Date:</span><strong id="viewer-cert-date" class="text-[#F5F1E8]"></strong></div>
+          <div class="text-on-surface-variant flex justify-between"><span>Credential Hash:</span><strong id="viewer-cert-id" class="text-primary"></strong></div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <a id="viewer-open-doc" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all flex items-center gap-1.5 shadow-md shadow-primary/20">
+            <span class="material-symbols-outlined text-[16px]">download</span>
+            <span>OPEN DOCUMENT</span>
+          </a>
+          <a id="viewer-verify-link" href="#" target="_blank" rel="noopener noreferrer" class="hidden px-4 py-2 rounded-xl bg-surface-container-high border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs hover:border-primary transition-all">VERIFY SOURCE ↗</a>
+          <button type="button" onclick="closeViewerModal()" class="px-4 py-2 rounded-xl bg-surface-container-high border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs hover:border-primary transition-all">
+            <span>CLOSE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- OWNER AUTHENTICATION MODAL -->
+<div id="owner-auth-modal" class="fixed inset-0 z-[9997] hidden items-center justify-center bg-[#060607]/90 backdrop-blur-xl p-4" style="display: none;">
+  <form id="owner-auth-form" onsubmit="handleOwnerAuthSubmit(event)" class="relative w-full max-w-md rounded-2xl bg-[#0A0A0B] p-6 sm:p-7 border border-primary/40 shadow-2xl space-y-5">
+    <div class="flex items-start justify-between gap-3 pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/40 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">shield_person</span>
+        </div>
+        <div>
+          <h3 class="font-headline-md text-base text-[#F5F1E8] font-bold">Owner Access Portal</h3>
+          <p class="font-telemetry-mono text-[11px] text-on-surface-variant">Restricted // session max 2h</p>
+        </div>
+      </div>
+      <button type="button" onclick="closeOwnerAuthModal()" class="text-on-surface-variant hover:text-white p-1 rounded-lg hover:bg-surface-container-high transition-colors" aria-label="Close owner login">
+        <span class="material-symbols-outlined text-[22px]">close</span>
+      </button>
+    </div>
+
+    <div class="space-y-1.5">
+      <label for="owner-passkey-input" class="font-hud-micro text-xs text-on-surface-variant uppercase tracking-wider">Owner Passkey</label>
+      <div class="relative">
+        <input id="owner-passkey-input" name="password" type="password" autocomplete="current-password" required placeholder="Enter owner passkey" class="w-full pl-3.5 pr-11 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-sm font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary transition-colors">
+        <button type="button" onclick="togglePasswordVisibility()" aria-label="Toggle passkey visibility" class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-on-surface-variant hover:text-primary transition-colors">
+          <span id="auth-eye-icon" class="material-symbols-outlined text-[18px]">visibility</span>
+        </button>
+      </div>
+    </div>
+
+    <p id="auth-error-msg" class="hidden px-3 py-2 rounded-lg bg-secondary/10 border border-secondary/40 font-telemetry-mono text-xs text-secondary">Invalid passkey. Access denied.</p>
+
+    <div class="flex items-center gap-2.5 pt-1">
+      <button type="submit" id="owner-auth-submit" class="flex-1 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all flex items-center justify-center gap-1.5 shadow-md shadow-primary/20">
+        <span class="material-symbols-outlined text-[16px]">lock_open</span>
+        <span>AUTHENTICATE</span>
+      </button>
+      <button type="button" onclick="closeOwnerAuthModal()" class="px-4 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs hover:border-primary transition-all">CANCEL</button>
+    </div>
+
+    <p class="font-hud-micro text-[10px] text-on-surface-variant leading-relaxed">Public visitors keep read-only access. Upload, edit, publish and delete require an authenticated owner session.</p>
+  </form>
+</div>
+
+<!-- CERTIFICATE EDIT MODAL (OWNER ONLY) -->
+<div id="cert-edit-modal" class="fixed inset-0 z-[9998] hidden items-center justify-center bg-black/85 backdrop-blur-xl p-3 sm:p-6 overflow-y-auto" style="display: none;">
+  <form id="cert-edit-form" onsubmit="handleCertificateUpdate(event)" class="relative w-full max-w-xl rounded-2xl bg-[#0A0A0B] p-5 sm:p-6 border border-primary/40 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+    <div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[20px] text-primary">edit_document</span>
+        <h3 class="font-headline-md text-base text-[#F5F1E8] font-bold">Edit Certificate</h3>
+      </div>
+      <button type="button" onclick="closeEditModal()" class="text-on-surface-variant hover:text-white p-1 rounded-lg hover:bg-surface-container-high transition-colors" aria-label="Close edit form">
+        <span class="material-symbols-outlined text-[22px]">close</span>
+      </button>
+    </div>
+
+    <input type="hidden" id="edit-cert-id">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="space-y-1.5">
+        <label for="edit-cert-title" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Certificate Title *</label>
+        <input required id="edit-cert-title" type="text" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-body-md text-[#F5F1E8] outline-none focus:border-primary">
+      </div>
+      <div class="space-y-1.5">
+        <label for="edit-cert-issuer" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Issuer *</label>
+        <input required id="edit-cert-issuer" type="text" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-body-md text-[#F5F1E8] outline-none focus:border-primary">
+      </div>
+      <div class="space-y-1.5">
+        <label for="edit-cert-cat" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Category *</label>
+        <select id="edit-cert-cat" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+          <option value="ece">ECE &amp; Embedded Systems</option>
+          <option value="web">Creative Development &amp; Web</option>
+          <option value="iot">Industrial IoT &amp; Robotics</option>
+          <option value="academic">Academic Core &amp; Honors</option>
+        </select>
+      </div>
+      <div class="space-y-1.5">
+        <label for="edit-cert-date" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Issue Date *</label>
+        <input required id="edit-cert-date" type="date" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+      </div>
+      <div class="space-y-1.5">
+        <label for="edit-cert-credential" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Credential ID</label>
+        <input id="edit-cert-credential" type="text" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+      </div>
+      <div class="space-y-1.5">
+        <label for="edit-cert-url" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Verification URL</label>
+        <input id="edit-cert-url" type="url" placeholder="https://" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+      </div>
+    </div>
+
+    <div class="space-y-1.5">
+      <label for="edit-cert-desc" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Description</label>
+      <textarea id="edit-cert-desc" rows="3" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-body-md text-[#F5F1E8] outline-none focus:border-primary"></textarea>
+    </div>
+
+    <div class="space-y-1.5">
+      <label for="edit-cert-status" class="font-hud-micro text-[11px] text-on-surface-variant uppercase">Visibility</label>
+      <select id="edit-cert-status" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+        <option value="published">Published (visible to visitors)</option>
+        <option value="draft">Draft (owner only)</option>
+      </select>
+    </div>
+
+    <p id="edit-feedback" class="hidden px-3 py-2 rounded-lg font-telemetry-mono text-xs border"></p>
+
+    <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-outline-variant">
+      <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs hover:border-primary transition-all">CANCEL</button>
+      <button type="submit" id="edit-submit-btn" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all flex items-center gap-1.5 shadow-md shadow-primary/20">
+        <span class="material-symbols-outlined text-[16px]">save</span>
+        <span>SAVE CHANGES</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- OWNER CONTROL CENTER (OWNER ONLY) -->
+<div id="owner-admin-dashboard" class="fixed inset-0 z-[9996] hidden bg-black/85 backdrop-blur-xl items-center justify-center p-3 sm:p-6 overflow-y-auto" style="display: none;">
+  <div class="relative w-full max-w-4xl rounded-2xl bg-[#0A0A0B] p-5 sm:p-7 border border-primary/50 shadow-2xl space-y-5 max-h-[92vh] overflow-y-auto">
+
+    <div class="p-3 rounded-xl bg-primary/10 border border-primary/40 flex items-center justify-between gap-3 text-primary">
+      <div class="flex items-center gap-2.5 font-hud-micro text-xs leading-relaxed">
+        <span class="material-symbols-outlined text-[18px] animate-pulse">verified_user</span>
+        <span id="session-banner-text">[OWNER DASHBOARD // VERIFIED SESSION]</span>
+      </div>
+      <span class="px-2 py-0.5 rounded bg-primary text-on-primary font-hud-micro text-[10px] font-bold shrink-0">SESSION SECURE</span>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/40 flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-headline-md text-base sm:text-lg text-[#F5F1E8] font-bold">Owner Control Center</span>
+            <span class="px-2 py-0.5 rounded bg-primary/15 border border-primary/30 font-hud-micro text-[10px] text-primary font-semibold">SESSION ACTIVE</span>
+          </div>
+          <p class="font-telemetry-mono text-xs text-on-surface-variant">Root Admin: P. Mohamed Idris // ID: SINC-0429</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button type="button" onclick="refreshCertificates()" class="px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant hover:border-primary text-primary font-hud-micro text-xs flex items-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[14px]">refresh</span><span>REFRESH</span>
+        </button>
+        <button type="button" onclick="handleOwnerLogout()" class="px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant hover:border-secondary text-secondary font-hud-micro text-xs flex items-center gap-1.5 transition-all">
+          <span class="material-symbols-outlined text-[14px]">logout</span><span>LOGOUT</span>
+        </button>
+        <button type="button" onclick="closeOwnerDashboard()" class="text-on-surface-variant hover:text-white p-1.5 rounded-lg hover:bg-surface-container-high transition-colors" aria-label="Close dashboard">
+          <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <div class="flex flex-wrap items-center gap-1.5 border-b border-outline-variant pb-2">
+        <button type="button" id="tab-btn-overview" onclick="switchTab('overview')" class="px-3 py-1.5 rounded-lg font-hud-micro text-xs font-bold transition-all bg-primary text-on-primary shadow-sm">1. Overview</button>
+        <button type="button" id="tab-btn-manage" onclick="switchTab('manage')" class="px-3 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">2. Manage Credentials</button>
+        <button type="button" id="tab-btn-upload" onclick="switchTab('upload')" class="px-3 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">3. Upload Certificate</button>
+        <button type="button" id="tab-btn-drafts" onclick="switchTab('drafts')" class="px-3 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">4. Drafts</button>
+        <button type="button" id="tab-btn-published" onclick="switchTab('published')" class="px-3 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all">5. Published</button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div id="tab-content-overview" class="space-y-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <span class="font-hud-micro text-[10px] text-on-surface-variant uppercase">Total Credentials</span>
+            <div id="stat-total" class="font-headline-md text-2xl text-[#F5F1E8] font-bold">0</div>
+            <span class="font-hud-micro text-[9px] text-primary">ALL TRACKS</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <span class="font-hud-micro text-[10px] text-on-surface-variant uppercase">Published</span>
+            <div id="stat-published" class="font-headline-md text-2xl text-primary font-bold">0</div>
+            <span class="font-hud-micro text-[9px] text-primary">LIVE ON PORTFOLIO</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <span class="font-hud-micro text-[10px] text-on-surface-variant uppercase">Drafts</span>
+            <div id="stat-drafts" class="font-headline-md text-2xl text-secondary font-bold">0</div>
+            <span class="font-hud-micro text-[9px] text-secondary">OWNER ONLY</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant space-y-1">
+            <span class="font-hud-micro text-[10px] text-on-surface-variant uppercase">Session</span>
+            <div id="stat-session" class="font-headline-md text-sm text-[#F5F1E8] font-bold flex items-center gap-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>AUTHENTICATED</div>
+            <span class="font-hud-micro text-[9px] text-on-surface-variant">SECURE COOKIE</span>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant space-y-2">
+          <div class="flex items-center justify-between border-b border-outline-variant pb-2">
+            <span class="font-hud-micro text-xs text-[#F5F1E8] font-bold uppercase tracking-wider">Registry Status</span>
+            <span id="registry-status" class="font-hud-micro text-[10px] text-primary">SYNC: ACTIVE</span>
+          </div>
+          <div class="space-y-1.5 font-telemetry-mono text-xs text-on-surface-variant">
+            <div class="flex items-center justify-between py-1 border-b border-outline-variant/50"><span>• Owner session verified from server cookie</span><span class="text-[10px] text-primary">OK</span></div>
+            <div class="flex items-center justify-between py-1 border-b border-outline-variant/50"><span>• Certificate metadata stored in Supabase Postgres</span><span class="text-[10px] text-primary">OK</span></div>
+            <div class="flex items-center justify-between py-1"><span>• Documents stored in the private "certificates" bucket</span><span class="text-[10px] text-primary">PRIVATE</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANAGE -->
+      <div id="tab-content-manage" class="space-y-4" style="display: none;">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <p class="font-body-sm text-xs text-on-surface-variant">Edit metadata, publish/unpublish, or permanently delete a credential. <span class="text-primary font-telemetry-mono">Total: <span id="admin-manage-count">0</span></span></p>
+          <button type="button" onclick="refreshCertificates()" class="font-hud-micro text-[11px] text-primary/80 hover:text-primary underline">RELOAD FROM SERVER</button>
+        </div>
+        <div id="admin-cert-list-container" class="space-y-2.5">
+          <div class="p-6 text-center font-hud-micro text-xs text-on-surface-variant">Loading certificates…</div>
+        </div>
+      </div>
+
+      <!-- UPLOAD -->
+      <div id="tab-content-upload" class="space-y-4" style="display: none;">
+        <form id="admin-cert-form" onsubmit="handleCertificateUpload(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label for="dash-cert-title" class="font-hud-micro text-xs text-on-surface-variant uppercase">Certificate Title *</label>
+              <input required id="dash-cert-title" type="text" placeholder="e.g. Advanced Embedded Systems &amp; RTOS Architecture" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-body-md text-[#F5F1E8] outline-none focus:border-primary">
+            </div>
+            <div class="space-y-1.5">
+              <label for="dash-cert-issuer" class="font-hud-micro text-xs text-on-surface-variant uppercase">Issuing Organization *</label>
+              <input required id="dash-cert-issuer" type="text" placeholder="e.g. ARM University / FreeRTOS Academy" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-body-md text-[#F5F1E8] outline-none focus:border-primary">
+            </div>
+            <div class="space-y-1.5">
+              <label for="dash-cert-cat" class="font-hud-micro text-xs text-on-surface-variant uppercase">Category Track *</label>
+              <select id="dash-cert-cat" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+                <option value="ece">ECE &amp; Embedded Systems</option>
+                <option value="web">Creative Development &amp; Web</option>
+                <option value="iot">Industrial IoT &amp; Robotics</option>
+                <option value="academic">Academic Core &amp; Honors</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label for="dash-cert-date" class="font-hud-micro text-xs text-on-surface-variant uppercase">Issue Date *</label>
+              <input required id="dash-cert-date" type="date" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+            </div>
+            <div class="space-y-1.5">
+              <label for="dash-cert-credential" class="font-hud-micro text-xs text-on-surface-variant uppercase">Credential ID</label>
+              <input id="dash-cert-credential" type="text" placeholder="e.g. TI-NPTEL-90428-SIG" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+            </div>
+            <div class="space-y-1.5">
+              <label for="dash-cert-url" class="font-hud-micro text-xs text-on-surface-variant uppercase">Verification URL</label>
+              <input id="dash-cert-url" type="url" placeholder="https://" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="dash-cert-desc" class="font-hud-micro text-xs text-on-surface-variant uppercase">Description</label>
+            <textarea id="dash-cert-desc" rows="3" placeholder="Verification scope, coursework covered, lab results…" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-body-md text-[#F5F1E8] outline-none focus:border-primary"></textarea>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="dash-cert-status" class="font-hud-micro text-xs text-on-surface-variant uppercase">Visibility</label>
+            <select id="dash-cert-status" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-xs font-telemetry-mono text-[#F5F1E8] outline-none focus:border-primary">
+              <option value="draft">Save as draft (owner only)</option>
+              <option value="published">Publish immediately</option>
+            </select>
+          </div>
+
+          <div class="space-y-1.5">
+            <span class="font-hud-micro text-xs text-on-surface-variant uppercase">Certificate File * (PDF, JPG, PNG, WebP · max 25 MB)</span>
+            <div class="rounded-xl border-2 border-dashed border-primary/30 hover:border-primary p-5 text-center bg-surface-container-lowest transition-all cursor-pointer group" onclick="document.getElementById('cert-file-input').click()">
+              <input type="file" id="cert-file-input" class="hidden" accept="application/pdf,image/png,image/jpeg,image/webp" onchange="handleFileSelect(event)">
+              <span class="material-symbols-outlined text-2xl text-primary mb-1 group-hover:scale-105 transition-transform">upload_file</span>
+              <p class="font-headline-md text-xs sm:text-sm text-[#F5F1E8] font-semibold">Click to attach the certificate document</p>
+              <p class="font-hud-micro text-[11px] text-on-surface-variant mt-0.5">Stored privately in Supabase Storage and served through short-lived signed URLs.</p>
+              <div id="upload-file-name" class="mt-2 font-telemetry-mono text-xs text-primary hidden"></div>
+            </div>
+          </div>
+
+          <p id="upload-feedback" class="hidden px-3 py-2 rounded-lg font-telemetry-mono text-xs border"></p>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-outline-variant">
+            <span class="font-hud-micro text-[11px] text-on-surface-variant">Public visitors maintain read-only access.</span>
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="saveAsDraft()" class="px-4 py-2.5 rounded-xl bg-surface-container-low border border-outline-variant text-[#F5F1E8] font-telemetry-mono text-xs font-semibold hover:border-primary hover:text-primary transition-all flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">save</span><span>SAVE AS DRAFT</span>
+              </button>
+              <button type="submit" id="upload-submit-btn" class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold hover:bg-[#FF6A5C] transition-all flex items-center gap-1.5 shadow-md shadow-primary/20">
+                <span class="material-symbols-outlined text-[16px]">publish</span><span>UPLOAD CERTIFICATE</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- DRAFTS -->
+      <div id="tab-content-drafts" class="space-y-3" style="display: none;">
+        <div class="flex items-center justify-between border-b border-outline-variant pb-2">
+          <span class="font-hud-micro text-xs text-secondary font-bold uppercase tracking-wider">Draft Artifacts (<span id="admin-draft-count">0</span>)</span>
+          <span class="font-hud-micro text-[10px] text-on-surface-variant">NOT VISIBLE ON PUBLIC GRID</span>
+        </div>
+        <div id="admin-draft-list" class="space-y-2.5"></div>
+      </div>
+
+      <!-- PUBLISHED -->
+      <div id="tab-content-published" class="space-y-3" style="display: none;">
+        <div class="flex items-center justify-between border-b border-outline-variant pb-2">
+          <span class="font-hud-micro text-xs text-primary font-bold uppercase tracking-wider">Live Published Credentials (<span id="admin-published-count">0</span>)</span>
+          <span class="font-hud-micro text-[10px] text-primary">SYNCED WITH DATABASE</span>
+        </div>
+        <div id="admin-published-list" class="space-y-2.5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="portal-toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[10001] hidden max-w-[90vw] px-4 py-2.5 rounded-xl font-telemetry-mono text-xs shadow-2xl border bg-[#0A0A0B] border-primary/40 text-[#F5F1E8]"></div>
+
+<!-- CERTIFICATION PORTAL RUNTIME (backend-backed) -->
+<script>
+(function () {
+  'use strict';
+
+  var state = {
+    publicCerts: [],
+    adminCerts: [],
+    filter: 'all',
+    isOwner: false,
+    activeTab: 'overview'
+  };
+
+  var CATEGORY_LABELS = {
+    ece: 'ECE & EMBEDDED',
+    web: 'CREATIVE CODE & WEB',
+    iot: 'INDUSTRIAL IOT',
+    academic: 'ACADEMIC CORE'
+  };
+
+  function el(id) {
+    return document.getElementById(id);
+  }
+
+  function escapeHtml(value) {
+    return String(value === null || value === undefined ? '' : value).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
+
+  function formatIssueDate(isoDate) {
+    if (!isoDate) return 'N/A';
+    var date = new Date(String(isoDate) + 'T00:00:00Z');
+    if (isNaN(date.getTime())) return String(isoDate);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  }
+
+  function setVisible(node, visible, display) {
+    if (!node) return;
+    node.classList.toggle('hidden', !visible);
+    node.style.display = visible ? (display || 'flex') : 'none';
+  }
+
+  function showToast(message, tone) {
+    var toast = el('portal-toast');
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 z-[10001] max-w-[90vw] px-4 py-2.5 rounded-xl font-telemetry-mono text-xs shadow-2xl border ' +
+      (tone === 'error'
+        ? 'bg-[#1F1414] border-secondary/60 text-secondary'
+        : 'bg-[#0A0A0B] border-primary/40 text-[#F5F1E8]');
+    toast.classList.remove('hidden');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(function () {
+      toast.classList.add('hidden');
+    }, 4200);
+  }
+
+  function setFeedback(node, message, tone) {
+    if (!node) return;
+    if (!message) {
+      node.classList.add('hidden');
+      node.textContent = '';
+      return;
+    }
+    node.textContent = message;
+    node.className = 'px-3 py-2 rounded-lg font-telemetry-mono text-xs border ' +
+      (tone === 'error'
+        ? 'bg-secondary/10 border-secondary/50 text-secondary'
+        : 'bg-primary/10 border-primary/40 text-primary');
+    node.classList.remove('hidden');
+  }
+
+  /**
+   * Same-origin API helper: the portfolio is served by the Next.js app that
+   * owns the API routes, so the session cookie travels automatically.
+   */
+  async function api(path, options) {
+    var config = options || {};
+    config.credentials = 'same-origin';
+    config.cache = 'no-store';
+
+    var response = await fetch(path, config);
+    var payload = null;
+
+    try {
+      payload = await response.json();
+    } catch (error) {
+      payload = null;
+    }
+
+    if (!response.ok || (payload && payload.success === false)) {
+      var message = (payload && payload.message) || 'Request failed (' + response.status + ')';
+      throw new Error(message);
+    }
+
+    return payload || {};
+  }
+
+  /* ---------------------------- public grid ---------------------------- */
+
+  function renderPublicCertificates() {
+    var grid = el('certifications-grid');
+    if (!grid) return;
+
+    var published = state.publicCerts;
+    var counter = el('cert-counter-label');
+    if (counter) {
+      counter.textContent = published.length + ' VERIFIED CREDENTIAL' + (published.length === 1 ? '' : 'S');
+    }
+
+    var visible = published.filter(function (cert) {
+      return state.filter === 'all' || String(cert.category || '').toLowerCase() === state.filter;
+    });
+
+    if (!visible.length) {
+      grid.innerHTML = '' +
+        '<div class="col-span-full p-8 rounded-2xl bg-surface-container border border-outline-variant text-center space-y-2">' +
+        '<span class="material-symbols-outlined text-3xl text-outline">folder_off</span>' +
+        '<p class="font-headline-md text-base text-[#F5F1E8]">No published credentials in this track yet.</p>' +
+        '<p class="font-hud-micro text-xs text-on-surface-variant">' +
+        (state.filter === 'all'
+          ? 'Certificates published from the owner dashboard appear here instantly.'
+          : 'Switch track, or publish a matching credential from the owner dashboard.') +
+        '</p></div>';
+      return;
+    }
+
+    grid.innerHTML = visible.map(certificateCard).join('');
+  }
+
+  function certificateCard(cert) {
+    var category = String(cert.category || '').toLowerCase();
+    var isCoral = category === 'web' || category === 'academic';
+    var accent = isCoral ? 'secondary' : 'primary';
+    var icon = category === 'web' ? 'animation' : category === 'academic' ? 'school' : category === 'iot' ? 'hub' : 'memory';
+    var label = CATEGORY_LABELS[category] || category.toUpperCase();
+    var credentialId = cert.credential_id || String(cert.id).slice(0, 8).toUpperCase();
+    var safeId = escapeHtml(cert.id);
+    var verifyLink = cert.verification_url
+      ? '<a href="' + escapeHtml(cert.verification_url) + '" target="_blank" rel="noopener noreferrer" class="font-hud-micro text-[10px] text-' + accent + ' hover:underline">VERIFY SOURCE ↗</a>'
+      : '<span class="font-hud-micro text-[10px] text-on-surface-variant">DOCUMENT ON RECORD</span>';
+
+    return '' +
+      '<div class="cert-card group relative rounded-2xl bg-surface-container p-5 sm:p-6 shadow-2xl border border-' + accent + '/30 hover:border-' + accent + ' transition-all duration-300 flex flex-col justify-between space-y-4" data-category="' + escapeHtml(category) + '">' +
+        '<div class="space-y-3">' +
+          '<div class="flex items-center justify-between font-hud-micro text-xs pb-2 border-b border-outline-variant">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="h-2 w-2 rounded-full bg-' + accent + ' animate-pulse"></span>' +
+              '<span class="text-' + accent + ' font-bold tracking-wider">' + escapeHtml(label) + ' // VERIFIED</span>' +
+            '</div>' +
+            '<span class="px-2 py-0.5 rounded bg-surface-container-highest border border-outline-variant font-telemetry-mono text-[10px] text-' + accent + '">' + escapeHtml(formatIssueDate(cert.issue_date)) + '</span>' +
+          '</div>' +
+          '<div class="flex items-start justify-between gap-3">' +
+            '<div>' +
+              '<h3 class="font-headline-md text-xl sm:text-2xl text-[#F5F1E8] font-bold group-hover:text-' + accent + ' transition-colors">' + escapeHtml(cert.title) + '</h3>' +
+              '<p class="font-body-sm text-xs text-' + accent + '/90 font-telemetry-mono mt-0.5">' + escapeHtml(cert.issuer) + '</p>' +
+            '</div>' +
+            '<div class="w-10 h-10 rounded-xl bg-surface-container-low border border-' + accent + '/30 flex items-center justify-center text-' + accent + ' shrink-0">' +
+              '<span class="material-symbols-outlined text-[20px]">' + icon + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">' + escapeHtml(cert.description || 'Verified credential record.') + '</p>' +
+          '<div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant flex items-center justify-between gap-2 font-telemetry-mono text-xs">' +
+            '<div class="flex items-center gap-2 min-w-0">' +
+              '<span class="material-symbols-outlined text-[16px] text-' + accent + '">verified_user</span>' +
+              '<span class="text-on-surface-variant truncate">ID: ' + escapeHtml(credentialId) + '</span>' +
+            '</div>' +
+            '<button type="button" onclick="copyCertId(\'' + escapeHtml(credentialId) + '\', this)" class="text-' + accent + ' hover:text-white transition-colors font-hud-micro text-[11px] underline shrink-0">COPY ID</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="pt-3 border-t border-outline-variant flex items-center justify-between gap-2">' +
+          '<button type="button" onclick="openViewerModal(\'' + safeId + '\')" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-' + accent + ' ' + (isCoral ? 'text-white hover:bg-[#FFC098]' : 'text-on-primary hover:bg-[#FF6A5C]') + ' font-telemetry-mono text-xs font-bold transition-all shadow-md">' +
+            '<span class="material-symbols-outlined text-[15px]">visibility</span><span>VIEW CREDENTIAL</span>' +
+          '</button>' +
+          verifyLink +
+        '</div>' +
+      '</div>';
+  }
+
+  async function loadPublicCertificates() {
+    var grid = el('certifications-grid');
+
+    try {
+      var result = await api('/api/upload/certificates');
+      state.publicCerts = Array.isArray(result.certificates) ? result.certificates : [];
+      renderPublicCertificates();
+    } catch (error) {
+      state.publicCerts = [];
+      if (grid) {
+        grid.innerHTML = '' +
+          '<div class="col-span-full p-8 rounded-2xl bg-surface-container border border-secondary/40 text-center space-y-2">' +
+          '<span class="material-symbols-outlined text-3xl text-secondary">cloud_off</span>' +
+          '<p class="font-headline-md text-base text-[#F5F1E8]">Certificates could not be loaded.</p>' +
+          '<p class="font-hud-micro text-xs text-on-surface-variant">' + escapeHtml(error.message) + '</p>' +
+          '<button type="button" onclick="refreshCertificates()" class="mt-2 px-4 py-2 rounded-xl bg-primary text-on-primary font-telemetry-mono text-xs font-bold">RETRY</button>' +
+          '</div>';
+      }
+      var counter = el('cert-counter-label');
+      if (counter) counter.textContent = 'REGISTRY OFFLINE';
+    }
+  }
+
+  /* ---------------------------- admin list ---------------------------- */
+
+  function renderAdminCertificates() {
+    var container = el('admin-cert-list-container');
+    var drafts = state.adminCerts.filter(function (cert) { return cert.status !== 'published'; });
+    var published = state.adminCerts.filter(function (cert) { return cert.status === 'published'; });
+
+    var total = el('admin-manage-count');
+    if (total) total.textContent = String(state.adminCerts.length);
+
+    var draftCount = el('admin-draft-count');
+    if (draftCount) draftCount.textContent = String(drafts.length);
+
+    var publishedCount = el('admin-published-count');
+    if (publishedCount) publishedCount.textContent = String(published.length);
+
+    var statTotal = el('stat-total');
+    if (statTotal) statTotal.textContent = String(state.adminCerts.length);
+
+    var statPublished = el('stat-published');
+    if (statPublished) statPublished.textContent = String(published.length);
+
+    var statDrafts = el('stat-drafts');
+    if (statDrafts) statDrafts.textContent = String(drafts.length);
+
+    if (container) {
+      container.innerHTML = state.adminCerts.length
+        ? state.adminCerts.map(adminRow).join('')
+        : '<div class="p-6 rounded-xl bg-surface-container-low border border-outline-variant text-center font-hud-micro text-xs text-on-surface-variant">No certificates registered yet. Use the Upload tab to add the first credential.</div>';
+    }
+
+    var draftList = el('admin-draft-list');
+    if (draftList) {
+      draftList.innerHTML = drafts.length
+        ? drafts.map(adminRow).join('')
+        : '<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant text-center font-hud-micro text-xs text-on-surface-variant">No drafts. Uploaded documents saved as draft stay hidden from visitors.</div>';
+    }
+
+    var publishedList = el('admin-published-list');
+    if (publishedList) {
+      publishedList.innerHTML = published.length
+        ? published.map(adminRow).join('')
+        : '<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant text-center font-hud-micro text-xs text-on-surface-variant">Nothing published yet.</div>';
+    }
+  }
+
+  function adminRow(cert) {
+    var isPublished = cert.status === 'published';
+    var safeId = escapeHtml(cert.id);
+
+    return '' +
+      '<div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3">' +
+        '<div class="space-y-1 min-w-0">' +
+          '<div class="flex items-center gap-2 flex-wrap">' +
+            '<span class="font-headline-md text-sm font-bold text-[#F5F1E8]">' + escapeHtml(cert.title) + '</span>' +
+            '<span class="px-2 py-0.5 rounded text-[10px] font-hud-micro ' + (isPublished ? 'bg-primary/10 text-primary border border-primary/30' : 'bg-surface-container-highest text-on-surface-variant border border-outline-variant') + '">' + (isPublished ? 'PUBLISHED' : 'DRAFT') + '</span>' +
+          '</div>' +
+          '<div class="font-telemetry-mono text-xs text-on-surface-variant flex items-center gap-2 flex-wrap">' +
+            '<span>' + escapeHtml(cert.issuer) + '</span><span>•</span>' +
+            '<span>' + escapeHtml(formatIssueDate(cert.issue_date)) + '</span><span>•</span>' +
+            '<span class="text-primary">' + escapeHtml(CATEGORY_LABELS[String(cert.category || '').toLowerCase()] || cert.category) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="flex items-center gap-2 self-end sm:self-center shrink-0">' +
+          '<button type="button" onclick="openEditModal(\'' + safeId + '\')" class="px-2.5 py-1 rounded-lg bg-surface-container-high border border-outline-variant text-[#F5F1E8] hover:border-primary font-hud-micro text-xs">EDIT</button>' +
+          '<button type="button" onclick="toggleCertificateStatus(\'' + safeId + '\')" class="px-2.5 py-1 rounded-lg border border-outline-variant hover:border-primary font-hud-micro text-xs ' + (isPublished ? 'text-secondary' : 'text-primary') + '">' + (isPublished ? 'UNPUBLISH' : 'PUBLISH') + '</button>' +
+          '<button type="button" onclick="openViewerModal(\'' + safeId + '\')" class="px-2.5 py-1 rounded-lg bg-surface-container-high border border-outline-variant text-[#F5F1E8] hover:border-primary font-hud-micro text-xs">PREVIEW</button>' +
+          '<button type="button" onclick="deleteCertificate(\'' + safeId + '\')" class="p-1 text-on-surface-variant hover:text-secondary rounded-lg transition-colors" title="Delete certificate" aria-label="Delete certificate">' +
+            '<span class="material-symbols-outlined text-[18px]">delete</span>' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  async function loadAdminCertificates() {
+    if (!state.isOwner) {
+      var container = el('admin-cert-list-container');
+      if (container) {
+        container.innerHTML = '<div class="p-6 rounded-xl bg-secondary/10 border border-secondary/40 text-center font-hud-micro text-xs text-secondary">Owner session required. Authenticate to manage credentials.</div>';
+      }
+      return;
+    }
+
+    try {
+      var result = await api('/api/upload/certificates/admin');
+      state.adminCerts = Array.isArray(result.certificates) ? result.certificates : [];
+    } catch (error) {
+      state.adminCerts = [];
+      showToast(error.message, 'error');
+    }
+
+    renderAdminCertificates();
+  }
+
+  /* ---------------------------- viewer ---------------------------- */
+
+  function findCertificate(id) {
+    var all = state.publicCerts.concat(state.adminCerts);
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].id === id) return all[i];
+    }
+    return null;
+  }
+
+  window.openViewerModal = async function (id) {
+    var cert = findCertificate(id);
+    if (!cert) return;
+
+    var image = el('viewer-cert-img');
+    var fallback = el('viewer-doc-fallback');
+    var fallbackText = el('viewer-doc-fallback-text');
+    var openDoc = el('viewer-open-doc');
+    var verifyLink = el('viewer-verify-link');
+
+    el('viewer-cert-title').textContent = cert.title;
+    el('viewer-cert-issuer').textContent = cert.issuer;
+    el('viewer-cert-date').textContent = formatIssueDate(cert.issue_date);
+    el('viewer-cert-id').textContent = cert.credential_id || cert.id;
+    el('viewer-cert-desc').textContent = cert.description || 'Verified credential record.';
+    el('viewer-cert-cat').textContent = 'TRACK: ' + (CATEGORY_LABELS[String(cert.category || '').toLowerCase()] || String(cert.category || '').toUpperCase());
+    el('viewer-status-badge').textContent = cert.status === 'published' ? 'AUTHENTIC RECORD' : 'DRAFT PREVIEW';
+
+    if (image) {
+      image.classList.add('hidden');
+      image.removeAttribute('src');
+    }
+    setVisible(fallback, true, 'flex');
+    if (fallbackText) fallbackText.textContent = 'Loading document…';
+    if (openDoc) openDoc.classList.add('hidden');
+    if (verifyLink) {
+      if (cert.verification_url) {
+        verifyLink.href = cert.verification_url;
+        verifyLink.classList.remove('hidden');
+      } else {
+        verifyLink.classList.add('hidden');
+      }
+    }
+
+    setVisible(el('cert-viewer-modal'), true, 'flex');
+
+    try {
+      var file = await api('/api/upload/certificates/' + encodeURIComponent(cert.id) + '/file');
+      if (openDoc) {
+        openDoc.href = file.fileUrl;
+        openDoc.classList.remove('hidden');
+      }
+      if (image && String(file.mimeType || cert.mime_type || '').indexOf('image/') === 0) {
+        image.src = file.fileUrl;
+        image.classList.remove('hidden');
+        setVisible(fallback, false);
+      } else if (fallbackText) {
+        fallbackText.textContent = 'PDF document on record. Use "Open document" to view it in a new tab.';
+      }
+    } catch (error) {
+      if (fallbackText) fallbackText.textContent = 'Document preview unavailable: ' + error.message;
+    }
+  };
+
+  window.closeViewerModal = function () {
+    setVisible(el('cert-viewer-modal'), false);
+    var image = el('viewer-cert-img');
+    if (image) image.removeAttribute('src');
+  };
+
+  /* ---------------------------- owner auth ---------------------------- */
+
+  function applyOwnerUi() {
+    var button = el('open-owner-auth-btn');
+    if (button) {
+      var labels = button.querySelectorAll('span');
+      if (labels[1]) labels[1].textContent = state.isOwner ? 'OWNER DASHBOARD' : 'OWNER ACCESS [AUTH]';
+      if (labels[2]) labels[2].textContent = state.isOwner ? 'DASHBOARD' : 'AUTH';
+    }
+    var banner = el('session-banner-text');
+    if (banner) banner.textContent = '[OWNER DASHBOARD // VERIFIED SESSION // ' + new Date().toLocaleTimeString() + ']';
+  }
+
+  window.openOwnerPortal = function () {
+    if (state.isOwner) {
+      window.openOwnerDashboard();
+      return;
+    }
+    var modal = el('owner-auth-modal');
+    setVisible(modal, true, 'flex');
+    setFeedback(el('auth-error-msg'), '');
+    var input = el('owner-passkey-input');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  window.closeOwnerAuthModal = function () {
+    setVisible(el('owner-auth-modal'), false);
+  };
+
+  window.togglePasswordVisibility = function () {
+    var input = el('owner-passkey-input');
+    var icon = el('auth-eye-icon');
+    if (!input || !icon) return;
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility_off';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility';
+    }
+  };
+
+  window.handleOwnerAuthSubmit = async function (event) {
+    event.preventDefault();
+
+    var input = el('owner-passkey-input');
+    var feedback = el('auth-error-msg');
+    var submit = el('owner-auth-submit');
+
+    if (!input || !input.value.trim()) {
+      setFeedback(feedback, 'Enter the owner passkey to continue.', 'error');
+      return;
+    }
+
+    setFeedback(feedback, '');
+    if (submit) submit.disabled = true;
+
+    try {
+      await api('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: input.value })
+      });
+
+      state.isOwner = true;
+      input.value = '';
+      window.closeOwnerAuthModal();
+      applyOwnerUi();
+      await loadAdminCertificates();
+      window.openOwnerDashboard();
+      showToast('Owner session authenticated.');
+    } catch (error) {
+      setFeedback(feedback, error.message === 'Invalid login credentials'
+        ? 'Invalid passkey. Access denied.'
+        : error.message, 'error');
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  };
+
+  window.handleOwnerLogout = async function () {
+    try {
+      await api('/api/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+
+    state.isOwner = false;
+    state.adminCerts = [];
+    window.closeOwnerDashboard();
+    applyOwnerUi();
+    renderAdminCertificates();
+    showToast('Owner session terminated.');
+  };
+
+  /* ---------------------------- dashboard ---------------------------- */
+
+  window.openOwnerDashboard = function () {
+    if (!state.isOwner) {
+      window.openOwnerPortal();
+      return;
+    }
+    setVisible(el('owner-admin-dashboard'), true, 'flex');
+    renderAdminCertificates();
+  };
+
+  window.closeOwnerDashboard = function () {
+    setVisible(el('owner-admin-dashboard'), false);
+  };
+
+  window.switchTab = function (tabName) {
+    var tabs = ['overview', 'manage', 'upload', 'drafts', 'published'];
+    if (tabs.indexOf(tabName) === -1) tabName = 'overview';
+    state.activeTab = tabName;
+
+    tabs.forEach(function (tab) {
+      var pane = el('tab-content-' + tab);
+      var button = el('tab-btn-' + tab);
+      var active = tab === tabName;
+
+      if (pane) {
+        pane.classList.toggle('hidden', !active);
+        pane.style.display = active ? 'block' : 'none';
+      }
+
+      if (button) {
+        button.className = 'px-3 py-1.5 rounded-lg font-hud-micro text-xs transition-all ' +
+          (active
+            ? 'font-bold bg-primary text-on-primary shadow-sm'
+            : 'text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant');
+      }
+    });
+
+    if (tabName === 'manage' || tabName === 'drafts' || tabName === 'published') {
+      renderAdminCertificates();
+    }
+  };
+
+  /* ---------------------------- upload / edit / delete ---------------------------- */
+
+  window.handleFileSelect = function (event) {
+    var file = event.target.files && event.target.files[0];
+    var label = el('upload-file-name');
+    if (!label) return;
+
+    if (!file) {
+      label.classList.add('hidden');
+      label.textContent = '';
+      return;
+    }
+
+    label.textContent = 'Attached: ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+    label.classList.remove('hidden');
+  };
+
+  window.saveAsDraft = function () {
+    var status = el('dash-cert-status');
+    if (status) status.value = 'draft';
+    var form = el('admin-cert-form');
+    if (form) form.requestSubmit();
+  };
+
+  window.handleCertificateUpload = async function (event) {
+    event.preventDefault();
+
+    var form = el('admin-cert-form');
+    var fileInput = el('cert-file-input');
+    var feedback = el('upload-feedback');
+    var submit = el('upload-submit-btn');
+    var file = fileInput && fileInput.files ? fileInput.files[0] : null;
+
+    if (!file) {
+      setFeedback(feedback, 'Attach the certificate file (PDF, JPG, PNG or WebP).', 'error');
+      return;
+    }
+
+    var body = new FormData();
+    body.append('title', (el('dash-cert-title').value || '').trim());
+    body.append('issuer', (el('dash-cert-issuer').value || '').trim());
+    body.append('category', el('dash-cert-cat').value);
+    body.append('issue_date', el('dash-cert-date').value);
+    body.append('credential_id', (el('dash-cert-credential').value || '').trim());
+    body.append('verification_url', (el('dash-cert-url').value || '').trim());
+    body.append('description', (el('dash-cert-desc').value || '').trim());
+    body.append('status', el('dash-cert-status').value);
+    body.append('file', file);
+
+    setFeedback(feedback, '');
+    if (submit) submit.disabled = true;
+    setFeedback(feedback, 'Uploading to the secure registry…');
+
+    try {
+      var result = await api('/api/upload/certificates', { method: 'POST', body: body });
+      if (form) form.reset();
+      var label = el('upload-file-name');
+      if (label) label.classList.add('hidden');
+      setFeedback(feedback, '');
+      showToast((result.certificate && result.certificate.status === 'published')
+        ? 'Certificate uploaded and published.'
+        : 'Certificate saved as draft.');
+      await refreshCertificates();
+      window.switchTab('manage');
+    } catch (error) {
+      setFeedback(feedback, error.message, 'error');
+      if (error.message.toLowerCase().indexOf('session') !== -1 || error.message.toLowerCase().indexOf('unauthorized') !== -1) {
+        state.isOwner = false;
+        applyOwnerUi();
+      }
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  };
+
+  window.toggleCertificateStatus = async function (id) {
+    var cert = findCertificate(id);
+    if (!cert) return;
+
+    var nextStatus = cert.status === 'published' ? 'draft' : 'published';
+
+    try {
+      await api('/api/upload/certificates/' + encodeURIComponent(id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      showToast(nextStatus === 'published' ? 'Certificate published.' : 'Certificate unpublished.');
+      await refreshCertificates();
+    } catch (error) {
+      showToast(error.message, 'error');
+    }
+  };
+
+  window.deleteCertificate = async function (id) {
+    if (!window.confirm('Permanently delete this certificate and its stored document?')) return;
+
+    try {
+      await api('/api/upload/certificates?id=' + encodeURIComponent(id), { method: 'DELETE' });
+      showToast('Certificate deleted.');
+      await refreshCertificates();
+    } catch (error) {
+      showToast(error.message, 'error');
+    }
+  };
+
+  window.openEditModal = function (id) {
+    var cert = findCertificate(id);
+    if (!cert) return;
+
+    el('edit-cert-id').value = cert.id;
+    el('edit-cert-title').value = cert.title || '';
+    el('edit-cert-issuer').value = cert.issuer || '';
+    el('edit-cert-cat').value = String(cert.category || 'ece').toLowerCase();
+    el('edit-cert-date').value = cert.issue_date || '';
+    el('edit-cert-credential').value = cert.credential_id || '';
+    el('edit-cert-url').value = cert.verification_url || '';
+    el('edit-cert-desc').value = cert.description || '';
+    el('edit-cert-status').value = cert.status === 'published' ? 'published' : 'draft';
+    setFeedback(el('edit-feedback'), '');
+    setVisible(el('cert-edit-modal'), true, 'flex');
+  };
+
+  window.closeEditModal = function () {
+    setVisible(el('cert-edit-modal'), false);
+  };
+
+  window.handleCertificateUpdate = async function (event) {
+    event.preventDefault();
+
+    var id = el('edit-cert-id').value;
+    var feedback = el('edit-feedback');
+    var submit = el('edit-submit-btn');
+
+    var payload = {
+      title: (el('edit-cert-title').value || '').trim(),
+      issuer: (el('edit-cert-issuer').value || '').trim(),
+      category: el('edit-cert-cat').value,
+      issue_date: el('edit-cert-date').value,
+      credential_id: (el('edit-cert-credential').value || '').trim(),
+      verification_url: (el('edit-cert-url').value || '').trim(),
+      description: (el('edit-cert-desc').value || '').trim(),
+      status: el('edit-cert-status').value
+    };
+
+    if (!payload.title || !payload.issuer || !payload.issue_date) {
+      setFeedback(feedback, 'Title, issuer and issue date are required.', 'error');
+      return;
+    }
+
+    if (submit) submit.disabled = true;
+    setFeedback(feedback, 'Saving…');
+
+    try {
+      await api('/api/upload/certificates/' + encodeURIComponent(id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      window.closeEditModal();
+      showToast('Certificate updated.');
+      await refreshCertificates();
+    } catch (error) {
+      setFeedback(feedback, error.message, 'error');
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  };
+
+  /* ---------------------------- misc public helpers ---------------------------- */
+
+  window.copyCertId = function (id, btn) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(id).then(function () {
+        var original = btn.textContent;
+        btn.textContent = 'COPIED!';
+        setTimeout(function () { btn.textContent = original; }, 1800);
+      }).catch(function () {
+        window.prompt('Credential Verification ID:', id);
+      });
+    } else {
+      window.prompt('Credential Verification ID:', id);
+    }
+  };
+
+  window.filterCertificates = function (category, activeBtn) {
+    state.filter = category || 'all';
+
+    document.querySelectorAll('.cert-filter-btn').forEach(function (button) {
+      button.className = 'cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs text-on-surface-variant hover:text-white bg-surface-container-low border border-outline-variant transition-all';
+    });
+
+    if (activeBtn) {
+      activeBtn.className = 'cert-filter-btn px-3.5 py-1.5 rounded-lg font-hud-micro text-xs font-bold transition-all bg-primary text-on-primary shadow-sm';
+    }
+
+    renderPublicCertificates();
+  };
+
+  window.refreshCertificates = async function () {
+    await loadPublicCertificates();
+    if (state.isOwner) {
+      await loadAdminCertificates();
+    }
+  };
+
+  /* ---------------------------- boot ---------------------------- */
+
+  async function boot() {
+    await loadPublicCertificates();
+
+    try {
+      var session = await api('/api/session');
+      state.isOwner = Boolean(session && session.authenticated);
+    } catch (error) {
+      state.isOwner = false;
+    }
+
+    applyOwnerUi();
+
+    if (state.isOwner) {
+      await loadAdminCertificates();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<!-- ==========================================================================
+     CINEMATIC ENGINE — one listener per concern. Extends the existing motion
+     system: staggered arrival, CSS-3D depth tilt with a pointer-following
+     sheen, hero floor/layer parallax, damped cursor light, scroll-linked rule.
+     It reads and animates only; no text, structure, colour, data or API is
+     rewritten, and prefers-reduced-motion switches all of it off.
+     ========================================================================== -->
+<script>
+(function () {
+  'use strict';
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  var wideScreen = window.matchMedia('(min-width: 1024px)');
+  function still() { return reduceMotion.matches; }
+  function clamp(v) { return Math.max(-1, Math.min(1, v)); }
+
+  function damp(cur, target, lambda, dt) {
+    return cur + (target - cur) * (1 - Math.exp(-lambda * dt));
+  }
+  function dtFrom(now, ref) {
+    return Math.min(0.05, (now - ref) / 1000 || 0.016);
+  }
+
+  /* ---------------------------------------------------------------- arrival */
+  var REVEAL = [
+    '#home [class*="lg:col-span-7"] > *',
+    '#home [class*="lg:col-span-5"]',
+    '#ece-code [class*="md:grid-cols-4"] > div',
+    '#about [class*="md:grid-cols-4"] > div',
+    '#about [class*="md:col-span-7"]',
+    '#about [class*="md:col-span-5"]',
+    '#about [class*="md:col-span-12"]',
+    '#education .group',
+    '#skills [class*="md:grid-cols-2"] > div',
+    '#projects .group',
+    '#certifications-grid > div',
+    '#learning [class*="lg:grid-cols-4"] > div',
+    '#learning [class*="md:grid-cols-12"] > div',
+    '#contact [class*="md:grid-cols-2"] > *'
+  ];
+
+  var io = null;
+  if ('IntersectionObserver' in window) {
+    io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) show(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+  }
+
+  function show(el) {
+    if (!el || !el.classList) return;
+    el.classList.remove('pa-pending');
+    el.classList.add('pa-in');
+    if (io) io.unobserve(el);
+  }
+
+  function reveal(el, delay) {
+    if (!el || el.nodeType !== 1 || el.classList.contains('pa-in')) return;
+    if (el.getAttribute('data-pa-seen') === '1') return;
+    el.setAttribute('data-pa-seen', '1');
+    el.style.setProperty('--pa-delay', Math.round(delay) + 'ms');
+    if (still() || !io) { show(el); return; }
+    el.classList.add('pa-pending');
+    io.observe(el);
+  }
+
+  function revealGroup(nodes) {
+    Array.prototype.forEach.call(nodes, function (el) {
+      var i = el.parentElement
+        ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+      reveal(el, Math.min(i, 6) * 70);
+    });
+  }
+
+  function scan() {
+    if (still()) return;
+    REVEAL.forEach(function (sel) {
+      var found;
+      try { found = document.querySelectorAll(sel); } catch (e) { return; }
+      revealGroup(found);
+    });
+    revealGroup(document.querySelectorAll('main section h2'));
+    Array.prototype.forEach.call(document.querySelectorAll('main section h2'), function (h2) {
+      reveal(h2.parentElement, 0);
+    });
+  }
+
+  /* ------------------------------------------------------- hero 3D staging */
+  var hero = document.getElementById('home');
+  var heroCard = hero ? hero.querySelector('[class*="hud-bracket"]') : null;
+
+  function paintHeroFloor() {
+    if (!hero || hero.querySelector('.cs-floor')) return;
+    var content = hero.querySelector(':scope > div.max-w-container-max');
+    if (content) content.classList.add('cs-hero-content');
+    var floor = document.createElement('div');
+    floor.className = 'cs-floor';
+    floor.setAttribute('aria-hidden', 'true');
+    floor.innerHTML = '<div class="cs-floor__grid"></div><div class="cs-floor__glow"></div>';
+    hero.insertBefore(floor, hero.firstChild);
+  }
+
+  /* real z-separation inside the hero panel: header, core, readouts, clock bus */
+  function paintHeroDepth() {
+    if (!heroCard || still()) return;
+    var depths = [18, 38, 22, 12];
+    Array.prototype.forEach.call(heroCard.children, function (el, i) {
+      if (!el.classList) return;
+      el.classList.add('cs-depth');
+      el.style.setProperty('--cs-z', (depths[i] != null ? depths[i] : 10) + 'px');
+    });
+  }
+
+  /* ------------------------------------------------- tilt + pointer sheen */
+  var TILT = [
+    '#home [class*="hud-bracket"]',
+    '#ece-code .group',
+    '#education .group',
+    '#skills [class*="md:grid-cols-2"] > div',
+    '#projects .group',
+    '#certifications-grid > div',
+    '#learning [class*="lg:grid-cols-4"] > div',
+    '#contact [class*="md:grid-cols-2"] > *'
+  ];
+
+  function paintTilt() {
+    if (still() || !finePointer.matches) return;
+    TILT.forEach(function (sel) {
+      var found;
+      try { found = document.querySelectorAll(sel); } catch (e) { return; }
+      Array.prototype.forEach.call(found, function (el) {
+        el.classList.add('pa-tilt');
+        if (!el.querySelector(':scope > .cs-sheen')) {
+          var sheen = document.createElement('span');
+          sheen.className = 'cs-sheen';
+          sheen.setAttribute('aria-hidden', 'true');
+          el.insertBefore(sheen, el.firstChild);
+        }
+      });
+    });
+  }
+
+  var tilt = { el: null, rx: 0, ry: 0, tx: 0, ty: 0, raf: 0, last: 0 };
+
+  function tiltFrame(now) {
+    var dt = dtFrom(now, tilt.last);
+    tilt.last = now;
+    if (!tilt.el) { tilt.raf = 0; return; }
+    tilt.rx = damp(tilt.rx, tilt.tx, 9, dt);
+    tilt.ry = damp(tilt.ry, tilt.ty, 9, dt);
+    tilt.el.style.setProperty('--pa-rx', tilt.rx.toFixed(2) + 'deg');
+    tilt.el.style.setProperty('--pa-ry', tilt.ry.toFixed(2) + 'deg');
+    tilt.raf = requestAnimationFrame(tiltFrame);
+  }
+
+  function tiltReset(el) {
+    if (!el) return;
+    el.classList.remove('cs-lit');
+    el.style.setProperty('--pa-rx', '0deg');
+    el.style.setProperty('--pa-ry', '0deg');
+    el.style.setProperty('--pa-tz', '0px');
+    el.style.removeProperty('--cs-mx');
+    el.style.removeProperty('--cs-my');
+  }
+
+  document.addEventListener('pointermove', function (e) {
+    if (still() || !finePointer.matches || !e.target.closest) return;
+    var next = e.target.closest('.pa-tilt');
+    if (next !== tilt.el) {
+      tiltReset(tilt.el);
+      tilt.el = next;
+      if (next) {
+        tilt.rx = 0; tilt.ry = 0;
+        next.classList.add('cs-lit');
+        next.style.setProperty('--pa-tz', '10px');
+        if (!tilt.raf) { tilt.last = performance.now(); tilt.raf = requestAnimationFrame(tiltFrame); }
+      }
+    }
+    if (!next) return;
+    var r = next.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var nx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    var ny = ((e.clientY - r.top) / r.height) * 2 - 1;
+    var amp = next.closest('#home') ? 6 : 4.5;
+    tilt.ty = clamp(nx) * amp;
+    tilt.tx = clamp(ny) * -amp * 0.8;
+    next.style.setProperty('--cs-mx', (((nx + 1) / 2) * 100).toFixed(1) + '%');
+    next.style.setProperty('--cs-my', (((ny + 1) / 2) * 100).toFixed(1) + '%');
+  }, { passive: true });
+
+  document.addEventListener('pointerleave', function () {
+    tiltReset(tilt.el);
+    tilt.el = null;
+  }, { passive: true });
+
+  /* ------------------------------------------------ hero scroll depth kick */
+  var heroRaf = 0;
+
+  function paintHeroScroll() {
+    if (still() || !finePointer.matches || !wideScreen.matches || !hero || !heroCard) return;
+    var r = hero.getBoundingClientRect();
+    var p = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height)));
+    heroCard.style.setProperty('--cs-scroll', (p * 3.4).toFixed(2) + 'deg');
+  }
+
+  window.addEventListener('scroll', function () {
+    if (heroRaf) return;
+    heroRaf = requestAnimationFrame(function () { heroRaf = 0; paintHeroScroll(); });
+  }, { passive: true });
+
+  /* ------------------------------------------------------------- parallax */
+  var PARALLAX = [
+    '#home [class*="blur-[130px]"]',
+    '#home [class*="blur-[120px]"]'
+  ];
+
+  var par = { x: 0, y: 0, tx: 0, ty: 0, raf: 0, last: 0, items: [] };
+
+  function paintParallax() {
+    par.items = [];
+    if (still()) return;
+    PARALLAX.forEach(function (sel, si) {
+      var found;
+      try { found = document.querySelectorAll(sel); } catch (e) { return; }
+      Array.prototype.forEach.call(found, function (el, i) {
+        var depth = (si + i) % 2 ? 10 : -14;
+        el.classList.add('pa-parallax');
+        par.items.push({ el: el, depth: depth });
+      });
+    });
+  }
+
+  function parFrame(now) {
+    var dt = dtFrom(now, par.last);
+    par.last = now;
+    par.x = damp(par.x, par.tx, 3.1, dt);
+    par.y = damp(par.y, par.ty, 3.1, dt);
+    for (var i = 0; i < par.items.length; i++) {
+      var it = par.items[i];
+      it.el.style.setProperty('--pa-px', (par.x * it.depth).toFixed(2) + 'px');
+      it.el.style.setProperty('--pa-py', (par.y * it.depth * 0.6).toFixed(2) + 'px');
+    }
+    if (Math.abs(par.x - par.tx) > 0.001 || Math.abs(par.y - par.ty) > 0.001) {
+      par.raf = requestAnimationFrame(parFrame);
+    } else { par.raf = 0; }
+  }
+
+  window.addEventListener('pointermove', function (e) {
+    if (still() || !par.items.length) return;
+    par.tx = (e.clientX / window.innerWidth) * 2 - 1;
+    par.ty = (e.clientY / window.innerHeight) * 2 - 1;
+    if (!par.raf) { par.last = performance.now(); par.raf = requestAnimationFrame(parFrame); }
+  }, { passive: true });
+
+  /* --------------------------------------------------------------- float */
+  function paintFloat() {
+    if (still()) return;
+    Array.prototype.forEach.call(
+      document.querySelectorAll('#home [class*="hud-bracket"] span[class*="rounded-full"][class*="absolute"]'),
+      function (el, i) {
+        el.style.setProperty('--pa-i', i);
+        el.classList.add('pa-float');
+      }
+    );
+  }
+
+  /* -------------------------------------------------- damped cursor light */
+  var glow = document.getElementById('cursor-glow');
+  var gl = { x: 0, y: 0, tx: 0, ty: 0, raf: 0, last: 0 };
+
+  function glowFrame(now) {
+    var dt = dtFrom(now, gl.last);
+    gl.last = now;
+    gl.x = damp(gl.x, gl.tx, 7.5, dt);
+    gl.y = damp(gl.y, gl.ty, 7.5, dt);
+    if (glow) {
+      glow.style.transform = 'translate3d(' + gl.x.toFixed(2) + 'px, '
+        + gl.y.toFixed(2) + 'px, 0px) translate(-50%, -50%)';
+    }
+    if (Math.abs(gl.x - gl.tx) > 0.2 || Math.abs(gl.y - gl.ty) > 0.2) {
+      gl.raf = requestAnimationFrame(glowFrame);
+    } else { gl.raf = 0; }
+  }
+
+  if (glow && wideScreen.matches && !still()) {
+    gl.x = gl.tx = window.innerWidth * 0.5;
+    gl.y = gl.ty = window.innerHeight * 0.45;
+    window.addEventListener('pointermove', function (e) {
+      gl.tx = e.clientX; gl.ty = e.clientY;
+      if (!gl.raf) { gl.last = performance.now(); gl.raf = requestAnimationFrame(glowFrame); }
+    }, { passive: true });
+    window.addEventListener('pointerleave', function () {
+      gl.tx = window.innerWidth * 0.5; gl.ty = window.innerHeight * 0.45;
+      if (!gl.raf) { gl.last = performance.now(); gl.raf = requestAnimationFrame(glowFrame); }
+    });
+  }
+
+  /* ------------------------------------------- scroll-linked header rule */
+  var rail = document.getElementById('scroll-progress');
+  var scrollTick = 0;
+
+  function paintProgress() {
+    if (!rail) return;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? window.scrollY / max : 0;
+    rail.style.setProperty('--pa-progress', Math.max(0, Math.min(1, p)).toFixed(4));
+  }
+
+  window.addEventListener('scroll', function () {
+    if (scrollTick) return;
+    scrollTick = requestAnimationFrame(function () { scrollTick = 0; paintProgress(); });
+  }, { passive: true });
+  window.addEventListener('resize', paintProgress, { passive: true });
+
+  /* ------------------------------------------------------------------ boot */
+  function boot() {
+    paintHeroFloor();
+    paintHeroDepth();
+    paintProgress();
+    scan();
+    paintTilt();
+    paintParallax();
+    paintFloat();
+    paintHeroScroll();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+  /* dynamically rendered certificates get the same depth */
+  var grid = document.getElementById('certifications-grid');
+  if (grid && 'MutationObserver' in window) {
+    var mo = new MutationObserver(function () { scan(); paintTilt(); });
+    mo.observe(grid, { childList: true });
+  }
+
+  /* safety net: never leave above-the-fold content invisible */
+  window.setTimeout(function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.pa-pending'), function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) show(el);
+    });
+  }, 2600);
+})();
+</script>
+
+</body></html>
